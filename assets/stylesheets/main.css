@@ -1,0 +1,323 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center, dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend, table, caption,
+tbody, tfoot, thead, tr, th, td, article, aside,
+canvas, details, embed, figure, figcaption, footer,
+header, hgroup, menu, nav, output, ruby, section,
+summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  font-family: 'Roboto', sans-serif;
+  vertical-align: baseline;
+}
+
+canvas {
+	border: none;
+	position: absolute;
+	z-index: -10;
+}
+
+h1 {
+	font-family: "IBM Plex Serif", serif;
+	font-size: 300%; 
+	font-weight: bold;
+	text-transform: uppercase;
+}
+
+h3 {
+	font-family: "Roboto", sans-serif;
+	font-size: 110%;
+}
+
+/* Navbar */
+nav {
+	position: absolute;
+	z-index: 100;
+	width: auto;
+	bottom: 8%;
+	left: 5%;
+}
+
+nav ul {
+	list-style: none;
+	width: inherit;
+	box-sizing: border-box;
+	white-space: nowrap;
+}
+
+nav ul li {
+	display: inline-block;
+	box-sizing: border-box;
+	margin: 5px;
+	padding-bottom: 2px;
+	width: 30px;
+	height: 25px;
+	font-size: 90%;
+	text-align: center;
+	position: relative;
+	border-bottom: 3px solid #9BA695;
+	overflow: hidden;
+	transition: all 0.5s ease-in-out;
+	color: #7A8275;
+	cursor: pointer;
+}
+
+nav ul li .label {
+	display: block;
+	position: absolute;
+	top: 0;
+	transform: translateY(-100%);
+	width: 100%;
+	font-size: 85%;
+	font-weight: bold;
+	text-align: center;
+	text-transform: uppercase;
+	color: inherit;
+}
+/* Navbar */
+
+/* Number */
+.num-container {
+	display: block;
+	position: absolute;
+	z-index: 100;
+	left: 5%;
+	top: 8%;
+	width: 65px;
+	height: 65px;
+	border: 0.5px solid #9BA695;
+	border-radius: 50%;
+	color: #9BA695;
+}
+
+.num-container ul {
+	list-style: none;
+	display: block;
+	width: 45%;
+	height: 45%;
+	overflow: hidden;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.num-container ul li {
+	display: block;
+	height: 100%;
+	position: relative;
+	transition: all 0.5s ease-in-out;
+}
+
+.num-container ul li .num {
+	font-family: 'Old Standard TT', serif;
+	font-size: 115%;
+	text-align: center;
+    top: 50%;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin-top: 3px;
+    cursor: default;
+}
+/* NUmber */
+
+/* Next Previous */
+.next,
+.previous {
+	position: absolute;
+	z-index: 100;
+	font-size: 90%:;
+}
+
+.previous {
+	top: 0;
+
+}
+
+.next {
+	bottom: 0;
+}
+
+/* Next Previous */
+
+/* Body */
+body {
+	margin: 0;
+	overflow: hidden;
+	height: 100vh;
+}
+
+.view-screen {
+	width: 100vw;
+	height: 100vh;
+	background-color: #000;
+}
+
+.content {
+	width: 100%;
+	height: 100%;
+	background-color: #000;
+	display: flex;
+	flex-direction: column;
+}
+
+.content::after {
+	content: "";
+	width: 10px;
+	height: 10px;
+	border-bottom: 2px solid #000;
+	border-right: 2px solid #000;
+	opacity: 0.5;
+	display: block;
+	position: absolute;
+	bottom: 2.5%;
+	left: 50%;
+	animation: down_arrow_zoom 3s ease-in-out infinite;
+}
+
+@keyframes down_arrow_zoom {
+	0% {transform: rotate(45deg) translateX(-50%) scale(1);}
+	50% {transform: rotate(45deg) translateX(-50%) scale(1.5);}
+	100% {transform: rotate(45deg) translateX(-50%) scale(1);}
+}
+
+section {
+	display: inline-block;
+	width: 100%;
+	height: 100%;
+	position: relative;
+	flex: 0 0 100%;
+}
+
+.section-1-color {
+	color: #534178;
+}
+
+.section-2-color {
+	color: #AB5129;
+}
+
+.section-3-color {
+	color: #2980B9;
+}
+
+/* Section 1 */	
+.section-1 {
+	background-image: url('../images/milky_way.jpg');
+	background-repeat: repeat;
+	background-position: 50% 0;
+}
+
+.firstname-wrapper {
+	display: block;
+	position: absolute;
+	top: 45%;
+	left: 40%;
+	z-index: 10;
+	background-color: #fff;
+	overflow: hidden;
+}
+
+.firstname-text {
+	transform: translateX(-100%);
+	transition: all 1s ease-in-out;
+}
+
+.lastname-wrapper {
+	display: block;
+	position: absolute;
+	top: 45%;
+	left: 35%;
+	overflow: hidden;
+}
+
+.lastname-text {
+	transform: translateX(100%);
+	transition: all 1s ease-in-out;
+}
+
+.in-position {
+	transform: translateX(0%);
+}
+
+.short-line::after {
+	content: "";
+	display: block;
+	position: absolute;
+	bottom: 1%;
+	left: 0;
+	height: 2.5px;
+	width: 0;
+	background-color: #534178;
+	animation: short_line 2s forwards;
+}
+
+@keyframes short_line {
+	0% {width: 0;}
+	65% {width: 40%;}
+	100% {width: 35%;}
+}
+
+.intro-wrapper {
+	width: 25%;
+    line-height: 135%;
+    display: block;
+    position: absolute;
+    top: 55%;
+}
+
+.intro-text {
+	opacity: 0;
+}
+
+.intro-text-wrapper {
+	display: inline-block;
+	transform: translate3d(0, 50px, 0);
+	transition: all 0.2s ease;
+	opacity: 0;
+	font-family: 'Play', sans-serif;
+}
+
+.intro-text-wrapper .intro-text-char {
+	display: inline;
+	font-family: inherit;
+}
+
+.space-char {
+	display: inline;
+}
+
+.section-1-image {
+	height: 100%;
+	width: 100%;
+	float: right;
+}
+
+/* Section 1 */
+
+
+/* Section 2 */
+.section-2 {
+	background-image: url('../images/road.jpg');
+	background-repeat: no-repeat;
+}
+
+/* Section 3 */
+.section-3 {
+	background-image: url('../images/road.jpg');
+	background-repeat: no-repeat;
+}
+
+/* Section 4 */
+.section-4 {
+	background-image: url('../images/road.jpg');
+	background-repeat: no-repeat;
+}
+
