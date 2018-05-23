@@ -111,7 +111,7 @@ function Letter(node, animation_property = {}, r_scale = {}) {
 		t_begin = this.set_transform({ x: this.x_begin, y: this.y_begin, z: this.z_begin, scale: this.scale_begin, rotate: this.rotate_deg_begin });
 		t_end = this.set_transform({ x: this.x_end, y: this.y_end, z: this.z_end, scale: this.scale_end, rotate: this.rotate_deg_end });
 
-		this.node.animate([
+		return this.node.animate([
 			{	// from 
 				opacity: this.opacity_begin,
 				transform: t_begin,

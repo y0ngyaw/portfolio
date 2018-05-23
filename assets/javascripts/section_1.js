@@ -1,7 +1,6 @@
 var section_1_in = function() {
 	let firstname = document.getElementById("firstname-text");
 	firstname.className = firstname.className + " in-position";
-	//firstname.addEventListener("transitionend", section_1_after_firstname);
 	firstname.addEventListener("transitionend", function f() {
 		let lastname = document.getElementById("lastname-text");
 		let left = document.getElementById("firstname-text").getBoundingClientRect().left - document.getElementById("lastname-text").getBoundingClientRect().width - (window.innerWidth * 0.01);
@@ -68,7 +67,48 @@ var section_1_out = function() {
 };
 
 var section_2_in = function() {
+	splitText("passion-wrapper", "passion-text-wrapper", "passion-text-char");
+	let passion_array = document.getElementsByClassName("passion-text-wrapper");
+	document.getElementById("passion-wrapper").style.opacity = "1";
 
+	let a = [];
+	for(var i=0; i<passion_array.length; i++) {
+		passion_array[i].childNodes.forEach(function(n) {
+
+			animation_property = {
+				x_end: "0",
+				y_end: "0",
+				z_end: "0",
+				scale_end: 1,
+				transform_type: "translate3d scale",
+				duration: 1500,
+				delay: i*50,
+			}
+
+			random_scale = {
+				min: -300,
+				max: 300,
+				scale_min: 1.1,
+				scale_max: 4.5
+			}
+
+			let l = new Letter(n, animation_property, random_scale);
+			a.push(l.animate());
+		});
+	};
+
+	a[a.length - 1].onfinish = function() {
+		/*setTimeout(function() {
+			let no_goal = document.getElementById("no-goal-text");
+			no_goal.classList = no_goal.classList + " in-position";
+			let beyond = document.getElementById("beyond-text");
+			beyond.classList = beyond.classList + " in-position";
+		}, 200);*/
+		let no_goal = document.getElementById("no-goal-text");
+		no_goal.classList = no_goal.classList + " in-position";
+		let beyond = document.getElementById("beyond-text");
+		beyond.classList = beyond.classList + " in-position";
+	};
 };
 
 var section_2_out = function() {

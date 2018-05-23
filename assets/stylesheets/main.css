@@ -30,6 +30,13 @@ h1 {
 	text-transform: uppercase;
 }
 
+h2 {
+	font-family: "IBM Plex Serif", serif;
+	font-size: 225%; 
+	font-weight: bold;
+	text-transform: uppercase;
+}
+
 h3 {
 	font-family: "Roboto", sans-serif;
 	font-size: 110%;
@@ -279,7 +286,7 @@ section {
 
 .intro-text-wrapper {
 	display: inline-block;
-	transform: translate3d(0, 50px, 0);
+	transform: translateX(-100%);
 	transition: all 0.2s ease;
 	opacity: 0;
 	font-family: 'Play', sans-serif;
@@ -307,6 +314,51 @@ section {
 .section-2 {
 	background-image: url('../images/road.jpg');
 	background-repeat: no-repeat;
+	color: #fff;
+}
+
+.section-2-wrapper {
+	width: 30%;
+	position: absolute;
+	left: 60%;
+	top: 45%;
+}
+
+.section-2-wrapper .title-1-wrapper,
+.section-2-wrapper .title-2-wrapper {
+	overflow: hidden;
+}
+
+.no-goal-text {
+	display: inline-block;
+	transform: translate3d(-100%, 0, 0);
+	transition: all 1.5s cubic-bezier(.215,.61,.355,1);
+}
+
+.beyond-text {
+	transform: translate3d(-100%, 0, 0);
+	transition: all 2.5s cubic-bezier(.215,.61,.355,1);
+}
+
+.in-position {
+	transform: translateX(0%);
+}
+
+.passion-wrapper {
+	margin-top: 2.5%;
+	opacity: 0;
+}
+
+.passion-wrapper .passion-text-wrapper {
+	display: inline-block;
+	font-family: 'Play', sans-serif;
+}
+
+.passion-wrapper .passion-text-wrapper .passion-text-char {
+	display: inline-block;
+	opacity: 0;
+	font-family: inherit;
+	font-size: 110%;
 }
 
 /* Section 3 */
