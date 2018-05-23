@@ -222,11 +222,12 @@ section {
 	background-position: 50% 0;
 }
 
+/*
 .firstname-wrapper {
 	display: block;
 	position: absolute;
 	top: 45%;
-	left: 40%;
+	left: 35%;
 	z-index: 10;
 	background-color: #fff;
 	overflow: hidden;
@@ -300,6 +301,66 @@ section {
 .space-char {
 	display: inline;
 }
+*/
+
+.section-1-wrapper {
+	display: block;
+	position: absolute;
+    width: 30%;
+    top: 45%;
+    left: 12%;
+}
+
+.section-1-wrapper .section-1-title {
+	box-sizing: border-box;
+}
+
+.firstname-wrapper,
+.lastname-wrapper {
+	display: inline-block;
+	box-sizing: border-box;
+	overflow: hidden;
+}
+
+.lastname-wrapper {
+	margin-right: 3%;
+}
+
+.firstname{
+	transform: translateX(-100%);
+	transition: all 1.5s cubic-bezier(.215,.61,.355,1);
+}
+
+.lastname {
+	transform: translateX(100%);
+	transition: all 2s cubic-bezier(.215,.61,.355,1);
+	transition-delay: 0.5s;
+}
+
+.in-position {
+	transform: translateX(0);
+}
+
+.intro-text {
+	opacity: 0;
+}
+
+.intro-text-wrapper {
+	display: inline-block;
+	transform: translateX(-100%);
+	transition: all 0.2s ease;
+	opacity: 0;
+	font-family: 'Play', sans-serif;
+}
+
+.intro-text-wrapper .intro-text-char {
+	display: inline;
+	font-family: inherit;
+}
+
+.space-char {
+	display: inline;
+}
 
 .section-1-image {
 	height: 100%;
@@ -321,7 +382,7 @@ section {
 	width: 30%;
 	position: absolute;
 	left: 60%;
-	top: 45%;
+	top: 40%;
 }
 
 .section-2-wrapper .title-1-wrapper,
