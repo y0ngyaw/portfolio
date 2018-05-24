@@ -99,67 +99,90 @@ var section_1_out = function() {
 	section_1.animate_out();
 };
 
+const section_2 = {
+	title_in_position: false,
+	no_goal: function() {
+		return document.getElementById("no-goal-text");
+	},
+	beyond: function() {
+		return document.getElementById("beyond-text");
+	},
+	in_position: function(el) {
+		el.className = el.className + " in-position";
+	},
+	remove_in_position: function(el) {
+		el.classList.remove("in-position");
+	},
+	passion_split: function() {
+		splitText("passion-wrapper", "passion-text-wrapper", "passion-text-char");
+	},
+	passion_animate_in: function() {
+		let passion_array = document.getElementsByClassName("passion-text-wrapper");
+		document.getElementById("passion-wrapper").style.opacity = "1";
+		this.title_in_position = false;
+		let a = [];
+		for(var i=0; i<passion_array.length; i++) {
+			passion_array[i].childNodes.forEach(function(n) {
+
+				animation_property = {
+					x_end: "0",
+					y_end: "0",
+					z_end: "0",
+					scale_end: 1,
+					transform_type: "translate3d scale",
+					duration: 1500,
+					delay: i*50,
+				}
+
+				random_scale = {
+					min: -300,
+					max: 300,
+					scale_min: 1.1,
+					scale_max: 4.5
+				}
+
+				let l = new Letter(n, animation_property, random_scale);
+				a.push(l.animate());
+			});
+		};
+		a[a.length - 1].onfinish = function() {
+			if(section_2.title_in_position === false) {
+				section_2.in_position(section_2.no_goal());
+				section_2.in_position(section_2.beyond());
+				section_2.title_in_position = true;
+			}
+		};
+	},
+	passion_animate_out: function() {
+		this.title_in_position = true;
+		let passion_array = document.getElementsByClassName("passion-text-wrapper");
+		for(var i=0; i<passion_array.length; i++) {
+			passion_array[i].animate([
+			{
+				transform: "translate3d(0, 0, 0)",
+				opacity: 1
+			},
+			{
+				transform: "translate3d(0, 45px, 0)",
+				opacity: 0
+			}], {
+				duration: 1000,
+				easing: "cubic-bezier(.215,.61,.355,1)",
+				fill: "forwards"
+			})
+		};
+	}
+}
+
 var section_2_in = function() {
-	splitText("passion-wrapper", "passion-text-wrapper", "passion-text-char");
-	let passion_array = document.getElementsByClassName("passion-text-wrapper");
-	document.getElementById("passion-wrapper").style.opacity = "1";
-
-	let a = [];
-	for(var i=0; i<passion_array.length; i++) {
-		passion_array[i].childNodes.forEach(function(n) {
-
-			animation_property = {
-				x_end: "0",
-				y_end: "0",
-				z_end: "0",
-				scale_end: 1,
-				transform_type: "translate3d scale",
-				duration: 1500,
-				delay: i*50,
-			}
-
-			random_scale = {
-				min: -300,
-				max: 300,
-				scale_min: 1.1,
-				scale_max: 4.5
-			}
-
-			let l = new Letter(n, animation_property, random_scale);
-			a.push(l.animate());
-		});
-	};
-
-	a[a.length - 1].onfinish = function() {
-		let no_goal = document.getElementById("no-goal-text");
-		no_goal.classList = no_goal.classList + " in-position";
-		let beyond = document.getElementById("beyond-text");
-		beyond.classList = beyond.classList + " in-position";
-	};
+	section_2.passion_split();
+	section_2.passion_animate_in();
 };
 
 var section_2_out = function() {
-	let no_goal = document.getElementById("no-goal-text");
-	no_goal.classList.remove("in-position");
-	let beyond = document.getElementById("beyond-text");
-	beyond.classList.remove("in-position");
-	let passion_array = document.getElementsByClassName("passion-text-wrapper");
-	for(var i=0; i<passion_array.length; i++) {
-		passion_array[i].animate([
-		{
-			transform: "translate3d(0, 0, 0)",
-			opacity: 1
-		},
-		{
-			transform: "translate3d(0, 45px, 0)",
-			opacity: 0
-		}], {
-			duration: 1000,
-			easing: "cubic-bezier(.215,.61,.355,1)",
-			fill: "forwards"
-		})
-	}
-
+	section_2.passion_animate_out();
+	section_2.remove_in_position(section_2.no_goal());
+	section_2.remove_in_position(section_2.beyond());
 };	
 
 var section_3_in = function() {
