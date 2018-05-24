@@ -25,9 +25,8 @@ const section_1 = {
 	animate_in: function() {
 		this.intro_opacity(1);
 		let intro_word_array = this.intro_word();
-		let a = [];
 		for(var i=0; i<intro_word_array.length; i++) {
-			let b = intro_word_array[i].animate([
+			intro_word_array[i].animate([
 			{
 				transform: "translate3d(0, 45px, 0)",
 				opacity: 0
@@ -41,11 +40,8 @@ const section_1 = {
 				delay: (i*75),
 				fill: "forwards"
 			});
-			a.push(b);
 		};
-		a[0].onfinish = function() {
-			section_1.intro_loaded = true;
-		};
+		section_1.intro_loaded = true;
 	},
 	animate_out: function() {
 		this.leaving = true;
@@ -73,7 +69,6 @@ const section_1 = {
 		}
 	},
 }
-
 
 var section_1_in = function() {
 	section_1.in_position(section_1.firstname());
