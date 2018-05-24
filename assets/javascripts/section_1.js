@@ -1,15 +1,33 @@
-var section_1_in = function() {
-	let firstname = document.getElementById("firstname");
-	firstname.className = firstname.className + " in-position";
-	let lastname = document.getElementById("lastname");
-	lastname.style.transitionDelay = "0.5s";
-	lastname.className = lastname.className + " in-position";
-	setTimeout(function() {
+const section_1 = {
+	intro_loaded: false,
+	leaving: false,
+	firstname: function() {
+		return document.getElementById("firstname")
+	},
+	lastname: function() {
+		return document.getElementById("lastname")
+	},
+	intro_word: function() {
+		return document.getElementsByClassName("intro-text-wrapper")
+	},
+	in_position: function(el) {
+		el.className = el.className + " in-position";
+	},
+	remove_in_position: function(el) {
+		el.classList.remove("in-position");
+	},
+	intro_split: function() {
 		splitText("intro-text", "intro-text-wrapper", "intro-text-char");
-		$(".intro-text").css("opacity", 1);
-		let intro_word = document.getElementsByClassName("intro-text-wrapper");
-		for(var i=0; i<intro_word.length; i++) {
-			intro_word[i].animate([
+	},
+	intro_opacity: function(val) {
+		$(".intro-text").css("opacity", val);
+	},
+	animate_in: function() {
+		this.intro_opacity(1);
+		let intro_word_array = this.intro_word();
+		let a = [];
+		for(var i=0; i<intro_word_array.length; i++) {
+			let b = intro_word_array[i].animate([
 			{
 				transform: "translate3d(0, 45px, 0)",
 				opacity: 0
@@ -22,9 +40,50 @@ var section_1_in = function() {
 				easing: "cubic-bezier(.215,.61,.355,1)",
 				delay: (i*75),
 				fill: "forwards"
-			})
+			});
+			a.push(b);
 		};
+		a[0].onfinish = function() {
+			section_1.intro_loaded = true;
+		};
+	},
+	animate_out: function() {
+		this.leaving = true;
+		let intro_word_array = this.intro_word();
+		let a = [];
+		for(var i=0; i<intro_word_array.length; i++) {
+			b = intro_word_array[intro_word_array.length - (i+1)].animate([
+			{
+				transform: "translate3d(0, 0, 0)",
+				opacity: 1
+			},
+			{
+				transform: "translate3d(0, 45px, 0)",
+				opacity: 0
+			}], {
+				duration: 1000,
+				easing: "cubic-bezier(.215,.61,.355,1)",
+				fill: "forwards"
+			})
+			a.push(b);
+		};
+		a[0].onfinish = function() {
+			section_1.leaving = false;
+			section_1.intro_loaded = false;
+		}
+	},
+}
 
+
+var section_1_in = function() {
+	section_1.in_position(section_1.firstname());
+	section_1.in_position(section_1.lastname());
+	section_1.lastname().style.transitionDelay = "0.5s";
+	section_1.intro_split();
+	setTimeout(function() {
+		if(section_1.intro_loaded === false && section_1.leaving === false){
+			section_1.animate_in();
+		}
 	}, 1000);
 
 	$(document).mousemove(function(e){
@@ -39,27 +98,10 @@ var section_1_in = function() {
 }
 
 var section_1_out = function() {
-	let intro_word = document.getElementsByClassName("intro-text-wrapper");
-	for(var i=0; i<intro_word.length; i++) {
-		intro_word[intro_word.length - (i+1)].animate([
-		{
-			transform: "translate3d(0, 0, 0)",
-			opacity: 1
-		},
-		{
-			transform: "translate3d(0, 45px, 0)",
-			opacity: 0
-		}], {
-			duration: 1000,
-			easing: "cubic-bezier(.215,.61,.355,1)",
-			fill: "forwards"
-		})
-	}
-	let lastname = document.getElementById("lastname");
-	lastname.style.transitionDelay = "0s";
-	lastname.classList.remove("in-position");
-	let firstname = document.getElementById("firstname");
-	firstname.classList.remove("in-position");
+	section_1.remove_in_position(section_1.firstname());
+	section_1.remove_in_position(section_1.lastname());
+	section_1.lastname().style.transitionDelay = "0s";
+	section_1.animate_out();
 };
 
 var section_2_in = function() {
