@@ -193,10 +193,57 @@ var section_3_out = function() {
 
 };
 
-var section_4_in = function() {
+const section_4 = {
+	talk: function() {
+		return document.getElementById("talk-text");
+	},
+	item: function() {
+		return document.getElementsByClassName("contact-item");
+	},
+	animate_in: function(el_list) {
+		for(var i=0; i<el_list.length; i++) {
+			let a = el_list[i].animate([
+			{
+				opacity: 0
+			}, {
+				opacity: 1
+			}], {
+				duration: 2000,
+				delay: i*250,
+				easing: "ease",
+				fill: "forwards"
+			})
+		};
+	},
+	animate_out: function(el_list) {
+		for(var i=0; i<el_list.length; i++) {
+			el_list[el_list.length -1 -i].animate([
+			{
+				opacity: 1
+			}, {
+				opacity: 0
+			}], {
+				duration: 1000,
+				delay: i*100,
+				easing: "ease",
+				fill: "forwards"
+			})
+		};
+	},
+	talk_in_position: function() {
+		this.talk().className = this.talk().className + " talk-in-position";
+	},
+	talk_out_position: function() {
+		this.talk().classList.remove("talk-in-position");
+	}
+}
 
+var section_4_in = function() {
+	section_4.talk_in_position();
+	section_4.animate_in(section_4.item());
 };
 
 var section_4_out = function() {
-
+	section_4.talk_out_position();
+	section_4.animate_out(section_4.item());
 };

@@ -434,3 +434,77 @@ section {
 	background-repeat: no-repeat;
 }
 
+.section-4-wrapper {
+	display: block;
+	position: absolute;
+	width: 70%;
+	height: 30%;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.talk-wrapper,
+.contact-wrapper {
+	display: inline-block;
+	height: 100%;
+	width: 49%;
+	color: #fff;
+	vertical-align: top;
+}
+
+.talk-wrapper {
+	position: relative;
+}
+
+.talk-wrapper .talk-view {
+	display: inline-block;
+	position: absolute;
+	right: 8%;
+	top: 50%;
+	transform: translateY(-50%);
+	overflow: hidden;
+}
+
+.talk-wrapper .talk-view .talk-text {
+	transition: all 1s ease-in-out;
+	transform: translateX(100%);
+}
+
+.talk-in-position {
+	transform: translateX(0) !important;
+}
+
+.contact-wrapper .contact-flex-wrapper {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+.contact-flex-wrapper .contact-item {
+	flex: 0 0 25%;
+	display: flex;
+	align-items: center;
+	font-size: 120%;
+	opacity: 0;
+}
+
+.contact-flex-wrapper .contact-item a{
+	color: #fff;
+	text-decoration: none;
+	width: auto;
+	box-sizing: border-box;
+	white-space: nowrap;
+}
+
+.contact-item a i{
+	padding-right: 10px;
+	box-sizing: border-box;
+	opacity: 0.5;
+}
+
+.contact-item a span {
+	font-family: "Play", sans-serif;
+}
+
+
