@@ -9,9 +9,25 @@ const current = {
 	node: function() {
 		return document.querySelector(".current");
 	},
+	next_node: function() {
+		let v = document.getElementsByClassName("viewbox");
+		for(var i=0; i<v.length; i++) {
+			if(v[i].dataset.section == this.next_page) {
+				return v[i];
+			}
+		}
+	},
 	update_page: function() {
+		this.node().classList.remove("current");
 		this.page = this.next_page;
 		this.next_page = null;
+
+		let all = document.getElementsByClassName("viewbox");
+		for(var i=0; i<all.length; i++) {
+			if(all[i].dataset.section == this.page) {
+				all[i].classList.add("current");
+			}
+		}
 	},
 	update_translate: function(translate) {
 		this.translate = translate
@@ -106,42 +122,85 @@ const view = {
 		view.disable_wheel();
 		let sec_out_function = window[current.get_out_function()];
 		sec_out_function();
+
 		let a = document.querySelector(".content").animate([
-			{ 
-				transform: "scale(1) " + this.formulate_begin(), 
-				offset: 0
-			}, {
-				transform: "scale(0.8) " + this.formulate_begin(),
-				offset: 0.2
-			}, {
-				transform: "scale(0.8) " + this.formulate_end(),
-				offset: 0.8
-			}, {
-				transform: "scale(1.0) " + this.formulate_end(),
-				offset: 1
-			}], {
-				duration: 3000,
-				easing: "ease-in-out",
-				fill: "forwards"
+		{
+			transform: "scale(1)"
+		}, {
+			transform: "scale(0.8)"
+		}], {
+			duration: 800,
+			easing: "ease-in-out",
+			fill: "forwards"
 		});
 		a.onfinish = function() {
-			nav.remove_element();
-			current.node().classList.remove("current");
-			current.update_page();
+			if(current.difference() < 0 ) {
+				current.node().style.right = "unset";
+				current.node().style.left = 0;
+				current.node().childNodes[1].style.float = "left";
 
-			let all_section = document.getElementsByTagName("section");
-			for(var i=0; i<all_section.length; i++) {
-				if(all_section[i].dataset.section == current.page) {
-					all_section[i].classList.add("current");
-				}
+				current.next_node().style.right = 0;
+				current.next_node().style.left = "unset";
+				current.next_node().childNodes[1].style.float = "right";
+			}
+			else {
+				current.node().style.right = 0;
+				current.node().style.left = "unset";
+				current.node().childNodes[1].style.float = "right";
+
+				current.next_node().style.right = "unset";
+				current.next_node().style.left = 0;
+				current.next_node().childNodes[1].style.float = "left";
 			}
 
-			let sec_in_function = window[current.get_in_function()];
-			sec_in_function();
-			nav.append_element();
-			num.update();
-			view.enable_wheel();
-		};		
+			current.node().animate([
+			{
+				width: "100%",
+				opacity: 1
+			}, {
+				width: 0,
+				opacity: 0.6
+			}], {
+				duration: 1000,
+				easing: "ease-in-out",
+				fill: "forwards"
+			});
+
+			let b = current.next_node().animate([
+			{
+				width: 0,
+				opacity: 0.6
+			}, {
+				width: "100%",
+				opacity: 1
+			}], {
+				duration: 1000,
+				easing: "ease-in-out",
+				fill: "forwards"
+			});
+
+			b.onfinish = function() {
+				let c = document.querySelector(".content").animate([
+				{
+					transform: "scale(0.8)"
+				}, {
+					transform: "scale(1)"
+				}], {
+					duration: 800,
+					easing: "ease-in-out",
+					fill: "forwards"
+				});
+				c.onfinish = function() {
+					nav.remove_element();
+					current.update_page();
+					let sec_in_function = window[current.get_in_function()];
+					sec_in_function();
+					nav.append_element();
+					num.update();
+					view.enable_wheel();
+				}
+			}
+		}
 	},
 	disable_wheel: function() {
 		this.wheel = false;
