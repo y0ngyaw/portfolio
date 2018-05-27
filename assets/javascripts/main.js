@@ -47,7 +47,7 @@ const current = {
 }
 
 const nav = {
-	nav_object: [{text: "intro", color: "#534178"}, {text: "passion", color: "#AB5129"}, {text: "project", color: "#2980B9"}, {text: "contact", color: "#534178"}],
+	nav_object: [{text: "intro", color: "#15298A"}, {text: "passion", color: "#534178"}, {text: "project", color: "#2980B9"}, {text: "contact", color: "#AB5129"}],
 	current_position: function() {
 		return document.querySelector(".current").dataset.section;
 	},
@@ -161,8 +161,8 @@ const view = {
 				width: 0,
 				opacity: 0.6
 			}], {
-				duration: 1000,
-				easing: "ease-in-out",
+				duration: 1500,
+				easing: "cubic-bezier(.8,.13,.2,.87)",
 				fill: "forwards"
 			});
 
@@ -174,8 +174,8 @@ const view = {
 				width: "100%",
 				opacity: 1
 			}], {
-				duration: 1000,
-				easing: "ease-in-out",
+				duration: 1500,
+				easing: "cubic-bezier(.8,.13,.2,.87)",
 				fill: "forwards"
 			});
 

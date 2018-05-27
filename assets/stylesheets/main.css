@@ -83,7 +83,7 @@ nav ul li .label {
 	top: 0;
 	transform: translateY(-100%);
 	width: 100%;
-	font-size: 85%;
+	font-size: 90%;
 	font-weight: bold;
 	text-align: center;
 	text-transform: uppercase;
@@ -199,19 +199,23 @@ section {
 }
 
 .section-1-color {
-	color: #534178;
+	color: #15298A;
 }
 
 .section-2-color {
-	color: #AB5129;
+	color: #534178;
 }
 
 .section-3-color {
 	color: #2980B9;
 }
 
+.section-4-color {
+	color: #AB5129;
+}
+
 /* Section 1 */	
-.section-1 {
+.section-1{
 	white-space: normal;
 	background-color: #fff;
 }
@@ -297,6 +301,7 @@ section {
 	transition: all 0.2s ease;
 	opacity: 0;
 	font-family: 'Play', sans-serif;
+	line-height: 1.5;
 }
 
 .intro-text-wrapper .intro-text-char {
@@ -307,6 +312,13 @@ section {
 .space-char {
 	display: inline;
 }
+
+/*
+.section-1-image {
+	height: 100%;
+	width: 100%;
+	float: right;
+}*/
 
 /* Section 1 */
 
@@ -353,6 +365,7 @@ section {
 .passion-wrapper .passion-text-wrapper {
 	display: inline-block;
 	font-family: 'Play', sans-serif;
+	line-height: 1.5;
 }
 
 .passion-wrapper .passion-text-wrapper .passion-text-char {
