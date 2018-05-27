@@ -68,9 +68,22 @@ const section_1 = {
 			section_1.intro_loaded = false;
 		}
 	},
+	mask_remove: function() {
+		let mask = document.getElementById("mask");
+		mask.style.transform = "translate3d(0, -100%, 0)";
+		let img = document.getElementById("img-1");
+		img.style.opacity = 1;
+	},
+	mask_cover: function() {
+		let mask = document.getElementById("mask");
+		mask.style.transform = "translate3d(0, 0, 0)";
+		let img = document.getElementById("img-1");
+		img.style.opacity = 0.5;
+	}
 }
 
 var section_1_in = function() {
+	section_1.mask_remove();
 	section_1.in_position(section_1.firstname());
 	section_1.in_position(section_1.lastname());
 	section_1.lastname().style.transitionDelay = "0.5s";
@@ -96,6 +109,7 @@ var section_1_out = function() {
 	section_1.remove_in_position(section_1.firstname());
 	section_1.remove_in_position(section_1.lastname());
 	section_1.lastname().style.transitionDelay = "0s";
+	section_1.mask_cover();
 	section_1.animate_out();
 };
 
