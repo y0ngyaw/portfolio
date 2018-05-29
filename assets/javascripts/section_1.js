@@ -199,12 +199,184 @@ var section_2_out = function() {
 	section_2.remove_in_position(section_2.beyond());
 };	
 
-var section_3_in = function() {
+const slide_1 = {
+	d_loaded: false,
+	leaving: false,
+	img_1: function() {
+		return document.getElementById("project-1-1");
+	},
+	img_2: function() {
+		return document.getElementById("project-1-2");
+	},
+	name: function() {
+		return document.getElementById("project-1-name");
+	},
+	subtitle: function() {
+		return document.getElementById("project-1-subtitle");
+	},
+	split_description: function() {
+		splitText("project-1-description", "project-1-description-word", "project-1-description-char")
+	},
+	description_array: function() {
+		return document.getElementsByClassName("project-1-description-word");
+	},
+	animate_in_img_1: function() {
+		this.img_1().animate([
+		{
+			opacity: 0,
+			transform: "translate3d(0, 10%, 0)"
+		}, {
+			opacity: 1,
+			transform: "translate3d(0, 0, 0)"
+		}], {
+			duration: 1000,
+			easing: "ease-in-out", 
+			fill: "forwards"
+		});
+	},
+	animate_in_img_2: function() {
+		this.img_2().animate([
+		{
+			opacity: 0,
+			transform: "translate3d(0, 10%, 0)"
+		}, {
+			opacity: 1,
+			transform: "translate3d(0, 0, 0)"
+		}], {
+			duration: 1000,
+			easing: "ease-in-out", 
+			fill: "forwards",
+			delay: 500
+		});
+	},
+	animate_out_img_1: function() {
+		this.img_1().animate([
+		{
+			opacity: 1,
+			transform: "translate3d(0, 0, 0)"
+		}, {
+			opacity: 0,
+			transform: "translate3d(0, -10%, 0)"
+		}], {
+			duration: 1000,
+			easing: "ease-in-out", 
+			fill: "forwards"
+		});
+	},
+	animate_out_img_2: function() {
+		this.img_2().animate([
+		{
+			opacity: 1,
+			transform: "translate3d(0, 0, 0)"
+		}, {
+			opacity: 0,
+			transform: "translate3d(0, -10%, 0)"
+		}], {
+			duration: 1000,
+			easing: "ease-in-out", 
+			fill: "forwards"
+		});
+	},
+	ns_in_position: function() {
+		this.name().style.transform = "translate3d(0, 0, 0)";
+		this.subtitle().style.transform = "translate3d(0, 0, 0)";
+	},
+	ns_out_position: function() {
+		this.name().style.transform = "translate3d(0, 100%, 0)";
+		this.subtitle().style.transform = "translate3d(0, 100%, 0)";
+		let name = this.name();
+		name.addEventListener("transitionend", function ns() {
+			slide_1.leaving = false;
+			name.removeEventListener("transitionend", ns);
+		});
+	},
+	animate_in_project_link: function() {
+		document.getElementById("project-1-link-list").style.opacity = 1;
+	},
+	animate_out_project_link: function() {
+		document.getElementById("project-1-link-list").style.opacity = 0;
+	},
+	animate_in_description: function() {
+		let name = this.name();
+		name.addEventListener("transitionend", function n() {
+			if(slide_1.leaving === false) {
+				slide_1.d_loaded = true;
+				let d_array = slide_1.description_array();
+				let a = [];
+				for(var i=0; i<d_array.length; i++) {
+					let b = d_array[i].animate([
+					{
+						transform: "translate3d(0, 45px, 0)",
+						opacity: 0
+					},
+					{
+						transform: "translate3d(0, 0, 0)",
+						opacity: 1
+					}], {
+						duration: 1500,
+						easing: "cubic-bezier(.215,.61,.355,1)",
+						delay: (i*75),
+						fill: "forwards"
+					});
+					a.push(b);
+				}
+				a[a.length - 1].onfinish = function() {
+					if(slide_1.leaving === false && slide_1.d_loaded === true) {
+						slide_1.animate_in_project_link();
+					}
+				}
+			}
+			name.removeEventListener("transitionend", n);
+		});		
+	},
+	animate_out_description: function() {
+		let d_array = this.description_array();
+		for(var i=0; i<d_array.length; i++) {
+			d_array[i].animate([
+			{
+				transform: "translate3d(0, 0, 0)",
+				opacity: 1
+			}, {
+				transform: "translate3d(0, 10px, 0)",
+				opacity: 0
+			}], {
+				duration: 1000,
+				easing: "cubic-bezier(.215,.61,.355,1)",
+				fill: "forwards"
+			});
+		};
+		this.d_loaded = false;
+	},
+	animate_in: function() {
+		this.animate_in_img_1();
+		this.animate_in_img_2();
+		this.ns_in_position();
+		this.split_description();
+		document.querySelector(".project-1-description").style.opacity = 1;
+		this.animate_in_description();
+	},
+	animate_out: function() {
+		this.leaving = true;
+		this.animate_out_img_1();
+		this.animate_out_img_2();
+		this.animate_out_project_link();
+		this.ns_out_position();
+		if(this.d_loaded) {
+			this.animate_out_description();
+		}
+	}
+}
 
+const section_3 = {
+
+}
+
+var section_3_in = function() {
+	slide_1.animate_in();
 };
 
 var section_3_out = function() {
-
+	slide_1.animate_out();
 };
 
 const section_4 = {
