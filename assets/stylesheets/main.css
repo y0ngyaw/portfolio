@@ -394,6 +394,30 @@ section {
 	display: none;
 }
 
+.section-3 .navigation {
+	display: block;
+	position: absolute;
+	bottom: 12%;
+	right: 5%;
+}
+
+.section-3 .navigation a {
+	background-color: transparent;
+	color: #2980B9;
+	text-decoration: none;
+	width: 50px;
+	height: 50px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: background-color 1s ease;
+}
+
+.section-3 .navigation a:hover {
+	background-color: #2980B9;
+	color: #fff;
+}
+
 .image-wrapper {
 	width: 45%;
 	height: 50%;
@@ -438,7 +462,7 @@ section {
 }
 
 .project-details .project-name h2 {
-    transition: transform 1s ease-in-out;
+    transition: all 1s ease-in-out;
     transform: translate3d(0, 100%, 0);
 }
 
@@ -450,7 +474,7 @@ section {
 }
 
 .project-details .project-subtitle div {
-	transition: transform 1s ease-in-out;
+	transition: all 1s ease-in-out;
 	transform: translate3d(0, 100%, 0);
 }
 
@@ -485,6 +509,40 @@ section {
 	text-decoration: none;
     margin: 0 1%;
     font-family: "Play", sans-serif;
+}
+
+.updating-content {
+	display: inline-block;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	color: #fff;
+	text-align: center;
+}
+
+.updating-content .updating-wrapper {
+	overflow: hidden;
+}
+
+.updating-content .updating-wrapper h1 {
+	transition: transform 1s ease-in-out;
+	transform: translateY(100%);
+}
+
+.updating-content .message {
+	font-family: "Play", sans-serif;
+	font-size: 90%;
+	margin: 2% 0;
+}
+
+.message-word {
+	display: inline-block;
+	opacity: 0;
+}
+
+.message-char {
+	display: inline;
 }
 
 /* Section 3 */

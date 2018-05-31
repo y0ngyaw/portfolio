@@ -278,12 +278,16 @@ const slide_1 = {
 		});
 	},
 	ns_in_position: function() {
-		this.name().style.transform = "translate3d(0, 0, 0)";
-		this.subtitle().style.transform = "translate3d(0, 0, 0)";
+		window.requestAnimationFrame(function() {
+			slide_1.name().style.transform = "translate3d(0, 0, 0)";
+			window.requestAnimationFrame(function() {
+				slide_1.subtitle().style.transform = "translate3d(0, 0, 0)";
+			})
+		});		
 	},
 	ns_out_position: function() {
-		this.name().style.transform = "translate3d(0, 100%, 0)";
-		this.subtitle().style.transform = "translate3d(0, 100%, 0)";
+		this.name().style.transform = null;
+		this.subtitle().style.transform = null;
 		let name = this.name();
 		name.addEventListener("transitionend", function ns() {
 			slide_1.leaving = false;
@@ -299,6 +303,7 @@ const slide_1 = {
 	animate_in_description: function() {
 		let name = this.name();
 		name.addEventListener("transitionend", function n() {
+			//console.log(slide_1.leaving);
 			if(slide_1.leaving === false) {
 				slide_1.d_loaded = true;
 				let d_array = slide_1.description_array();
@@ -306,14 +311,14 @@ const slide_1 = {
 				for(var i=0; i<d_array.length; i++) {
 					let b = d_array[i].animate([
 					{
-						transform: "translate3d(0, 45px, 0)",
+						transform: "translate3d(0, 25px, 0)",
 						opacity: 0
 					},
 					{
 						transform: "translate3d(0, 0, 0)",
 						opacity: 1
 					}], {
-						duration: 1500,
+						duration: 1000,
 						easing: "cubic-bezier(.215,.61,.355,1)",
 						delay: (i*75),
 						fill: "forwards"
@@ -363,16 +368,153 @@ const slide_1 = {
 		this.ns_out_position();
 		if(this.d_loaded) {
 			this.animate_out_description();
-		}
+		};
+	}
+}
+
+const slide_last = {
+	title: function() {
+		return document.getElementById("updating");
+	},
+	message: function() {
+		return document.getElementById("message");
+	},
+	animate_in_title: function() {
+		window.requestAnimationFrame(function() {
+			slide_last.title().style.transform = "translate3d(0, 0, 0)"
+		});
+	},
+	animate_out_title: function() {
+		this.title().style.transform = "translate3d(0, 100%, 0)"
+	},
+	split_message: function() {
+		splitText("message", "message-word", "message-char");
+	},
+	animate_in_message: function() {
+		this.split_message();
+		let message_array = document.getElementsByClassName("message-word");
+		for(var i=0; i<message_array.length; i++) {
+			message_array[i].animate([
+			{
+				opacity: 0,
+				transform: "translate3d(0, 30px, 0)"
+			}, {
+				opacity: 1,
+				transform: "translate3d(0, 0, 0)"
+			}], {
+				duration: 1000,
+				easing: "cubic-bezier(.215,.61,.355,1)",
+				delay: (i*75),
+				fill: "forwards"
+			})
+		};
+	},
+	animate_out_message: function() {
+		let message_array = document.getElementsByClassName("message-word");
+		for(var i=0; i<message_array.length; i++) {
+			message_array[i].animate([
+			{
+				opacity: 1,
+				transform: "translate3d(0, 0, 0)"
+			}, {
+				opacity: 0,
+				transform: "translate3d(0, 30px, 0)"
+			}], {
+				duration: 1000,
+				easing: "cubic-bezier(.215,.61,.355,1)",
+				fill: "forwards"
+			})
+		};
+	},
+	animate_in: function() {
+		this.animate_in_title();
+		this.animate_in_message()
+	},
+	animate_out: function() {
+		this.animate_out_title();
+		this.animate_out_message();
 	}
 }
 
 const section_3 = {
-
+	current: 1,
+	slide_object: [slide_1, slide_last],
+	interrupt: false,
+	increment: function() {
+		document.getElementsByClassName("slide")[this.current - 1].style.display = "none";
+		this.current = this.current + 1;
+		if(this.current > this.slide_object.length) {
+			this.current = 1;
+		};
+		document.getElementsByClassName("slide")[this.current - 1].style.display = "block";
+	},
+	decrement: function() {
+		document.getElementsByClassName("slide")[this.current - 1].style.display = "none";
+		this.current = this.current - 1;
+		if(this.current < 1) {
+			this.current = 1;
+		};
+		document.getElementsByClassName("slide")[this.current - 1].style.display = "block";
+	},
+	current_page_animate_in: function() {
+		this.slide_object[this.current - 1].animate_in();
+	},
+	current_page_animate_out: function() {
+		this.slide_object[this.current - 1].animate_out();
+	},
+	update_current: function(current) {
+		this.current = current;
+	},
+	next_page: function() {
+		this.interrupt = true;
+		this.current_page_animate_out();	
+		setTimeout(function() {
+			section_3.increment();
+			section_3.display_slide();
+		}, 2000);
+	},
+	previous_page: function() {
+		this.interrupt = true;
+		this.current_page_animate_out();
+		setTimeout(function() {
+			section_3.decrement();
+			section_3.display_slide();
+		}, 2000);
+	},
+	display_slide: function() {
+		this.current_page_animate_in();
+		setTimeout(function() {
+			if(section_3.interrupt === true) {
+				section_3.interrupt = false;
+			}
+			else {
+				section_3.current_page_animate_out();
+				setTimeout(function() {
+					if(section_3.interrupt === true) {
+						section_3.interrupt = false;
+					}
+					else {						
+						section_3.increment();
+						section_3.display_slide();
+					}
+				}, 2000);
+			}
+		}, 7000);
+	}
 }
 
 var section_3_in = function() {
-	slide_1.animate_in();
+	section_3.display_slide();
+
+	let n = document.getElementById("section-3-next");
+	n.addEventListener("click", function() {
+		section_3.next_page();
+	});
+	let p = document.getElementById("section-3-previous");
+	p.addEventListener("click", function() {
+		section_3.previous_page();
+	});
+	//slide_1.animate_in();
 };
 
 var section_3_out = function() {
