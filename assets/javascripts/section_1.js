@@ -202,6 +202,7 @@ var section_2_out = function() {
 const slide_1 = {
 	d_loaded: false,
 	leaving: false,
+	first_img: true,
 	img_1: function() {
 		return document.getElementById("project-1-1");
 	},
@@ -303,7 +304,6 @@ const slide_1 = {
 	animate_in_description: function() {
 		let name = this.name();
 		name.addEventListener("transitionend", function n() {
-			//console.log(slide_1.leaving);
 			if(slide_1.leaving === false) {
 				slide_1.d_loaded = true;
 				let d_array = slide_1.description_array();
@@ -353,7 +353,10 @@ const slide_1 = {
 		this.d_loaded = false;
 	},
 	animate_in: function() {
-		this.animate_in_img_1();
+		if(!this.first_img) {
+			this.animate_in_img_1();
+			this.first_img = true;
+		}
 		this.animate_in_img_2();
 		this.ns_in_position();
 		this.split_description();
@@ -362,6 +365,7 @@ const slide_1 = {
 	},
 	animate_out: function() {
 		this.leaving = true;
+		this.first_img = false;
 		this.animate_out_img_1();
 		this.animate_out_img_2();
 		this.animate_out_project_link();
@@ -369,6 +373,55 @@ const slide_1 = {
 		if(this.d_loaded) {
 			this.animate_out_description();
 		};
+	}
+}
+
+const slide_first = {
+	split_project: function() {
+		splitText("project-word", "project-wrapper-word", "project-wrapper-char");
+	},
+	animate_in: function() {
+		this.split_project();
+		document.getElementById("project-word").style.opacity = 1;
+		let word_array = document.getElementsByClassName("project-wrapper-word");
+
+		for(var i=0; i<word_array.length; i++) {
+			for(var j=0; j<word_array[i].childNodes.length; j++) {
+				animation_property = {
+					y_begin: -word_array[i].childNodes[j].clientHeight ,
+					y_end: 0,
+					opacity_begin: 0,
+					transform_type: "translateY",
+					duration: 1000,
+					delay: (i+1)*j*100,
+					easing: "cubic-bezier(0.175, 0.885, 0.32, 1.275)"
+				}
+
+				let l = new Letter(word_array[i].childNodes[j], animation_property);
+				l.animate();
+			}
+		}
+	},
+	animate_out: function() {
+		let word_array = document.getElementsByClassName("project-wrapper-word");
+
+		for(var i=0; i<word_array.length; i++) {
+			for(var j=0; j<word_array[i].childNodes.length; j++) {
+				animation_property = {
+					y_begin: 0,
+					y_end: word_array[i].childNodes[j].clientHeight,
+					opacity_begin: 1,
+					opacity_end: 0,
+					transform_type: "translateY",
+					duration: 750,
+					delay: (i+1)*j*100,
+					easing: "cubic-bezier(0.55, 0.055, 0.675, 0.19)"
+				}
+
+				let l = new Letter(word_array[i].childNodes[j], animation_property);
+				l.animate();
+			}
+		}
 	}
 }
 
@@ -381,7 +434,7 @@ const slide_last = {
 	},
 	animate_in_title: function() {
 		window.requestAnimationFrame(function() {
-			slide_last.title().style.transform = "translate3d(0, 0, 0)"
+			slide_last.title().style.transform = "translate3d(0, 0, 0)";
 		});
 	},
 	animate_out_title: function() {
@@ -437,93 +490,91 @@ const slide_last = {
 }
 
 const section_3 = {
-	current: 1,
-	slide_object: [slide_1, slide_last],
-	interrupt: false,
-	increment: function() {
-		document.getElementsByClassName("slide")[this.current - 1].style.display = "none";
-		this.current = this.current + 1;
-		if(this.current > this.slide_object.length) {
-			this.current = 1;
+	scrollable: true,
+	slide_function: [slide_first, slide_1, slide_last],
+	slide_status: [false, false, false],
+	slide_num: 1,
+	check_direction: function(mouse_pos) {
+		let ww = window.innerWidth;
+		if(mouse_pos > (ww * 90 / 100)) {
+			return "right"
+		}
+		else if (mouse_pos < (ww * 10 / 100)) {
+			return "left"
+		}
+		else {
+			return null
+		}
+	},
+	slide_num_increment: function() {
+		this.slide_num = this.slide_num + 1;
+		if(this.slide_num > this.slide_function.length) {
+			this.slide_num  = this.slide_function.length;
+		}
+	},
+	slide_num_decrement: function() {
+		this.slide_num = this.slide_num - 1;
+		if(this.slide_num < 1) {
+			this.slide_num  = 1;
+		}
+	},
+	move_slide: function(mouse_pos) {
+		if(this.scrollable == false) {
+			return;
 		};
-		document.getElementsByClassName("slide")[this.current - 1].style.display = "block";
-	},
-	decrement: function() {
-		document.getElementsByClassName("slide")[this.current - 1].style.display = "none";
-		this.current = this.current - 1;
-		if(this.current < 1) {
-			this.current = 1;
+		let direction = this.check_direction(mouse_pos);
+		let all_slide = document.getElementById("all-slide");
+		if (direction == null) {
+			return;
+		}
+		else if(!(direction == "right" && this.slide_num == this.slide_function.length) && !(direction == "left" && this.slide_num == 1)) {
+			if(direction == "right") {
+				this.slide_num_increment();
+			}
+			else if(direction == "left") {
+				this.slide_num_decrement();
+			}
+
+			all_slide.style.transform = "translate(-" + ((this.slide_num-1) * 80) + "%, 0)";
+			this.scrollable = false;
+			this.current_slide_in();
+
+			setTimeout(function() {
+				section_3.scrollable = true;
+			}, 2000);
 		};
-		document.getElementsByClassName("slide")[this.current - 1].style.display = "block";
 	},
-	current_page_animate_in: function() {
-		this.slide_object[this.current - 1].animate_in();
+	current_slide_in: function() {
+		if(this.slide_status[this.slide_num - 1] == false) {
+			this.slide_function[this.slide_num - 1].animate_in();
+			this.slide_status[this.slide_num - 1] = true;
+		}
 	},
-	current_page_animate_out: function() {
-		this.slide_object[this.current - 1].animate_out();
-	},
-	update_current: function(current) {
-		this.current = current;
-	},
-	next_page: function() {
-		this.interrupt = true;
-		this.current_page_animate_out();	
-		setTimeout(function() {
-			section_3.increment();
-			section_3.display_slide();
-		}, 2000);
-	},
-	previous_page: function() {
-		this.interrupt = true;
-		this.current_page_animate_out();
-		setTimeout(function() {
-			section_3.decrement();
-			section_3.display_slide();
-		}, 2000);
-	},
-	display_slide: function() {
-		this.current_page_animate_in();
-		setTimeout(function() {
-			if(section_3.interrupt === true) {
-				section_3.interrupt = false;
-			}
-			else {
-				section_3.current_page_animate_out();
-				setTimeout(function() {
-					if(section_3.interrupt === true) {
-						section_3.interrupt = false;
-					}
-					else {						
-						section_3.increment();
-						section_3.display_slide();
-					}
-				}, 2000);
-			}
-		}, 7000);
+	all_slide_out: function() {
+		for(var i=0; i<this.slide_function.length; i++) {
+			this.slide_function[i].animate_out();
+			this.slide_status[i] = false;
+		}
 	}
 }
 
 var section_3_in = function() {
-	section_3.display_slide();
-
-	let n = document.getElementById("section-3-next");
-	n.addEventListener("click", function() {
-		section_3.next_page();
-	});
-	let p = document.getElementById("section-3-previous");
-	p.addEventListener("click", function() {
-		section_3.previous_page();
-	});
-	//slide_1.animate_in();
+	section_3.current_slide_in();
+	document.getElementById("section-3").addEventListener("mousemove", function s3(event){
+		section_3.move_slide(event.clientX);
+	});	
 };
 
 var section_3_out = function() {
-	slide_1.animate_out();
+	section_3.all_slide_out();
 };
 
 const section_4 = {
 	talk: function() {
 		return document.getElementById("talk-text");
+	},
+	whoiam: function() {
+		return document.getElementById("whoiam");
 	},
 	item: function() {
 		return document.getElementsByClassName("contact-item");
@@ -559,19 +610,27 @@ const section_4 = {
 		};
 	},
 	talk_in_position: function() {
-		this.talk().className = this.talk().className + " talk-in-position";
+		this.talk().className = this.talk().className + " s4-in-position";
 	},
 	talk_out_position: function() {
-		this.talk().classList.remove("talk-in-position");
+		this.talk().classList.remove("s4-in-position");
+	},
+	whoiam_in_position: function() {
+		this.whoiam().className = this.whoiam().className + " s4-in-position";
+	},
+	whoiam_out_position: function() {
+		this.whoiam().classList.remove("s4-in-position");
 	}
 }
 
 var section_4_in = function() {
 	section_4.talk_in_position();
+	section_4.whoiam_in_position();
 	section_4.animate_in(section_4.item());
 };
 
 var section_4_out = function() {
 	section_4.talk_out_position();
+	section_4.whoiam_out_position();
 	section_4.animate_out(section_4.item());
 };
