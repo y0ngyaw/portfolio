@@ -127,7 +127,24 @@ nav ul li .label {
     margin-top: 3px;
     cursor: default;
 }
-/* NUmber */
+/* Number */
+
+/* Mouse */
+.mouse-indicator {
+	display: block;
+	position: absolute;
+	width: 3%;
+	z-index: 100;
+	left: 50%;
+	bottom: 7%;
+	transform: translate(-50%,0);
+	animation: mouse_fade_in 1.5s ease-in-out forwards;
+}
+
+@keyframes mouse_fade_in{
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
 
 /* Body */
 body {

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 360 360" style="enable-background:new 0 0 360 360;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#9BA695;stroke-width:14;stroke-miterlimit:10;}
+	.st1{fill:#9BA695;stroke:none;stroke-miterlimit:10;}
+</style>
+<path id="XMLID_1_" class="st0" d="M182,329.5h-4c-50.4,0-91.2-40.8-91.2-91.2V121.7c0-50.4,40.8-91.2,91.2-91.2h4
+	c50.4,0,91.2,40.8,91.2,91.2v116.5C273.3,288.7,232.4,329.5,182,329.5z"/>
+<circle id="XMLID_2_" class="st1" cx="180" cy="90" r="15" style="opacity: 0">
+	<animate
+		attributeType = "CSS"
+		attributeName = "opacity"
+		from = "0"
+		to = "1"
+		begin = "0s;c1ori.end"
+		dur = "1s"
+		fill = "freeze"
+		id = "c1appear"
+		/>
+
+	<animate
+		attributeType = "XML"
+		attributeName = "cy"
+		from = "90"
+		to = "150"
+		begin = "c1appear.end"
+		dur = "1s"
+		fill = "freeze"
+		id = "c1move"
+		/>
+
+	<animate
+		attributeType = "CSS"
+		attributeName = "opacity"
+		from = "1"
+		to = "0"
+		begin = "c1move.end"
+		dur = "1s"
+		fill = "freeze"
+		id = "c1complete"
+		/>
+
+	<animate
+		attributeType = "XML"
+		attributeName = "cy"
+		from = "150"
+		to = "90"
+		begin = "c1complete.end"
+		dur = "0.5s"
+		fill = "freeze"
+		id = "c1ori"
+		/>
+
+	
+</circle>
+<circle id="XMLID_2_" class="st1" cx="180" cy="90" r="15" style="opacity: 0">
+	<animate
+		attributeType = "CSS"
+		attributeName = "opacity"
+		from = "0"
+		to = "1"
+		begin = "c1move.begin + 0.5s"
+		dur = "1s"
+		fill = "freeze"
+		id = "c2appear"
+		/>
+
+	<animate
+		attributeType = "XML"
+		attributeName = "cy"
+		from = "90"
+		to = "150"
+		begin = "c2appear.end"
+		dur = "1s"
+		fill = "freeze"
+		id = "c2move"
+		/>
+
+	<animate
+		attributeType = "CSS"
+		attributeName = "opacity"
+		from = "1"
+		to = "0"
+		begin = "c2move.end"
+		dur = "1s"
+		fill = "freeze"
+		id = "c2complete"
+		/>
+
+	<animate
+		attributeType = "XML"
+		attributeName = "cy"
+		from = "150"
+		to = "90"
+		begin = "c2complete.end"
+		dur = "0.5s"
+		fill = "freeze"
+		id = "c2ori"
+		/>
+</circle>
+</svg>
