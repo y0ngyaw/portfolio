@@ -210,7 +210,88 @@ const view = {
 	}
 }
 
+function preloader_ready() {
+	let svg_object = document.getElementById("preloader-svg");
+	let svg = svg_object.contentDocument;
+	let path = ["w-path", "e1-path", "l-path", "c-path", "o-path", "m-path", "e2-path"]
+	for(var i=0; i<path.length; i++) {
+		let p = svg.getElementById(path[i]);
+		let a = "all_in 1s linear forwards " + (i*0.25) + "s";
+		p.style.animation = a;
+	}
+	setTimeout(function() {
+		let a = document.getElementById("preloader-circle");
+		a.className = a.className + " preloader-out";
+
+		setTimeout(function() {
+			document.getElementById("preloader").remove();
+			all_ready();
+		}, 1500)
+	}, 3000)
+}
+
+function all_ready() {
+	nav.append_element();
+	$(".nav-link").hover(function()	{
+		if(!this.classList.contains("active")){
+			nav.append_element(this, this.dataset.navigation, false);
+		};
+	}, function(){
+		if(!this.classList.contains("active")){
+			nav.remove_element(this, this.dataset.navigation);
+		}
+	});
+
+	$(".nav-link").click(function() {
+		if(view.wheel){
+			current.set_next_page(parseInt(this.dataset.navigation));
+			if(current.difference() == 0){
+				current.set_next_page(null);
+			}
+			else{
+				view.scroll();
+			}
+		}
+	})
+
+	if(!visited){
+		let sec_in_function = window[current.get_in_function()];
+		sec_in_function();
+		visited = true;
+	}
+
+	// Add Event Listener to <body> of the page
+	let body = document.querySelector("body");
+	body.addEventListener("wheel", function(){});
+	body.onwheel = function(event) {
+		// Check direction (1: scroll down, 2: scroll up)
+		let wheel_direction = event.deltaY > 0 ? 1 : -1;
+
+		if(view.wheel && !(current.page == 1 && wheel_direction == -1) && !(current.page == 4 && wheel_direction == 1)) {
+			if(wheel_direction === 1) {
+				current.set_next_page(current.page + 1);
+			}
+			else {
+				current.set_next_page(current.page - 1);
+			}
+			view.scroll();
+		}
+		else {
+			event.preventDefault();
+		}
+	};
+}
+
 let visited = false;
+window.addEventListener("load", function() {
+	
+	preloader_ready();
+
+})
+
+
+/*
+
 $(document).ready(function() {
 	nav.append_element();
 	$(".nav-link").hover(function()	{
@@ -261,4 +342,4 @@ $(document).ready(function() {
 			event.preventDefault();
 		}
 	};
-})
+})*/
