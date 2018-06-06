@@ -19,7 +19,7 @@ summary, time, mark, audio, video {
 
 h1 {
 	font-family: 'Merriweather', serif;
-	font-size: 325%; 
+	font-size: 300%; 
 	font-weight: bold;
 	text-transform: uppercase;
 }
@@ -33,7 +33,6 @@ h2 {
 
 h3 {
 	font-family: "Play", sans-serif;
-	font-size: 110%;
 }
 
 /* Preloader */
@@ -52,7 +51,7 @@ h3 {
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	width: 15%;
+	width: 10%;
 }
 
 .preloader-circle {
@@ -65,7 +64,7 @@ h3 {
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%) scale(0);
-	border-radius: 100%;
+	border-radius: 1000%;
 	transition: transform 2s linear;
 }
 
@@ -392,7 +391,6 @@ section {
 	display: inline-block;
 	opacity: 0;
 	font-family: inherit;
-	font-size: 110%;
 }
 /* Section 2 */
 
@@ -416,7 +414,7 @@ section {
 }
 
 .section-3 .all-slide .slide:nth-child(1) {
-	margin-left: 8%;
+	margin-left: 10%;
 }
 
 .slide-first .project-title {
@@ -671,3 +669,78 @@ section {
 }
 
 
+@media only screen and (max-width: 1024px) {
+	h1 {
+		font-size: 250%;
+	}
+
+	h2 {
+		font-size: 175%;
+	}
+
+	/* Number */
+	.num-container {
+		width: 60px;
+		height: 60px;
+	}
+
+	.num-container ul li .num {
+		margin-top: 1px;
+		font-size: 100%;
+	}
+	/* Number */
+
+	/* Mouse Indicatior */
+	.mouse-indicator {
+		display: none;
+	}
+	/* Mouse Indicator */
+
+	/* Section 1 */
+	.section-1-image {
+		height: unset;
+		width: 45%;
+		right: 0;
+	}
+
+	.section-1-image img {
+		height: auto;
+		width: 100%;
+	}
+
+	.section-1-wrapper {
+		top: 50%;
+	    left: 10%;
+	}
+	/* Section 1 */
+
+	/* Section 3 */
+	.image-wrapper {
+		height: 35%;
+		left: 5%;
+	}
+
+	.project-details {
+		right: 5%;
+		width: 40%;
+	}
+
+	.project-details .project-name h2 {
+		font-size: 150%;
+	}
+
+	.updating-content {
+		width: 100%;
+	}
+
+	.updating-content .message {
+		margin: 1% 0;
+	}
+	/* Section 3 */
+	
+	/* Section 4 */
+	.contact-flex-wrapper .contact-item {
+		font-size: 110%;
+	}
+	/* Section 4 */
+}
