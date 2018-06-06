@@ -64,7 +64,7 @@ h3 {
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%) scale(0);
-	border-radius: 1000%;
+	border-radius: 50%;
 	transition: transform 2s linear;
 }
 
@@ -743,4 +743,172 @@ section {
 		font-size: 110%;
 	}
 	/* Section 4 */
+}
+
+@media only screen and (max-width: 719px) {
+	h1 {
+		font-size: 200%;
+	}
+
+	h2 {
+		font-size: 150%;
+	}
+
+	h3 {
+		font-size: 90%;
+	}
+
+	/* Preloader */
+	.preloader object {
+		width: 80%;
+	}
+
+	/* Navbar */
+	nav ul {
+		display: none;
+	}
+
+
+	/* Number */
+	.num-container {
+		width: 45px;
+	    height: 45px;
+	    top: 5%;
+	}
+
+	.num-container ul {
+		font-size: 80%;
+	}
+
+
+	/* Section 1 */
+	.section-1-image {
+		bottom: unset;
+	    top: 15%;
+	    right: 3%;
+	    width: 85%;
+	}
+
+	.section-1-wrapper {
+		width: 85%;
+	    top: unset;
+	    bottom: 5%;
+	    left: 5%;
+	    padding: 10% 2%;
+	    background-color: rgba(255, 255, 255, 0.75);
+	}
+
+	.section-1-wrapper .section-1-title,
+	.section-1-wrapper .section-1-intro {
+		margin-top: 5%;
+	}
+
+	/* Section 2 */
+	.section-2-wrapper {
+		width: 85%;
+		padding: 7.5%;
+		left: unset;
+		top: 60%;
+	}
+
+	.section-2-wrapper .title-1-wrapper,
+	.section-2-wrapper .title-2-wrapper {
+		margin-top: 2%;
+	}
+
+	.passion-wrapper .passion-text-wrapper {
+		font-size: 90%;
+	}
+
+	/* Section 3 */ 
+	.slide-first .arrow {
+		opacity: 1;
+		top: 55%;
+		right: unset;
+		left: 50%;
+		transform: translate(-50%, 0);
+	}
+
+	.slide-first .project-title {
+		width: 100%;
+		text-align: center;
+	}
+
+	.image-wrapper {
+		width: 100%;
+	    top: 20%;
+	    left: unset;
+	    transform: unset;
+	}
+
+	.project-details {
+		width: 90%;
+		padding: 10% 5%;
+		top: 55%;
+		transform: unset;
+	}
+
+	.project-details .project-name h2 {
+		font-size: 120%;
+	}
+
+	.project-details .project-subtitle div {
+		dont-size: 85%;
+	}
+
+	.project-details .project-description,
+	.project-details .project-link-list {
+		font-size: 90%;
+	}
+	
+	.updating-content {
+		width: 80%;
+		padding: 10%;
+	}
+
+	.updating-content .updating-wrapper h1 {
+		font-size: 150%;
+	}
+
+	.message-word {
+		font-size: 80%;
+	}
+
+	/* Section 4 */
+	.section-4-wrapper {
+		width: 100%;
+		height: 70%;
+	}
+
+	.talk-wrapper {
+		width: 100%;
+		height: 20%;
+		margin-top: 30%;
+	}
+
+	.contact-wrapper {
+		width: 100%;
+		height: 40%;
+	}
+
+	.contact-flex-wrapper .contact-item {
+		padding-left: 15%;
+		font-size: 100%;
+	}
+
+	.talk-wrapper .talk-view {
+		text-align: left;
+		right: unset;
+		left: 15%;
+	}
+
+	.talk-wrapper .talk-view .talk-text,
+	.talk-wrapper .talk-view .whoiam {
+		transform: translateX(-100%);
+		transition: transform 1.5s cubic-bezier(.215,.61,.355,1);
+	}
+
+	.talk-wrapper .talk-view .whoiam {
+		transition-delay: 0.3s
+	}
 }
