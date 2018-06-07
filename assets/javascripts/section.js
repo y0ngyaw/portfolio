@@ -26,47 +26,24 @@ const section_1 = {
 		this.intro_opacity(1);
 		let intro_word_array = this.intro_word();
 		for(var i=0; i<intro_word_array.length; i++) {
-			intro_word_array[i].animate([
-			{
-				transform: "translate3d(0, 45px, 0)",
-				opacity: 0
-			},
-			{
-				transform: "translate3d(0, 0, 0)",
-				opacity: 1
-			}], {
-				duration: 1500,
-				easing: "cubic-bezier(.215,.61,.355,1)",
-				delay: (i*75),
-				fill: "forwards"
-			});
-		};
+			intro_word_array[i].style.transitionDelay = ((i*75)/1000) + "s";
+			intro_word_array[i].className += " intro-text-in";
+		}
+
 		section_1.intro_loaded = true;
 	},
 	animate_out: function() {
 		this.leaving = true;
 		let intro_word_array = this.intro_word();
-		let a = [];
 		for(var i=0; i<intro_word_array.length; i++) {
-			b = intro_word_array[intro_word_array.length - (i+1)].animate([
-			{
-				transform: "translate3d(0, 0, 0)",
-				opacity: 1
-			},
-			{
-				transform: "translate3d(0, 45px, 0)",
-				opacity: 0
-			}], {
-				duration: 1000,
-				easing: "cubic-bezier(.215,.61,.355,1)",
-				fill: "forwards"
-			})
-			a.push(b);
-		};
-		a[0].onfinish = function() {
+			intro_word_array[i].style.transitionDelay = "0s";
+			intro_word_array[i].classList.remove("intro-text-in");
+		}
+
+		intro_word_array[0].addEventListener("transitionend", function intro() {
 			section_1.leaving = false;
 			section_1.intro_loaded = false;
-		}
+		});
 	},
 	mask_remove: function() {
 		let mask = document.getElementById("mask");
@@ -114,6 +91,10 @@ var section_1_out = function() {
 	section_1.animate_out();
 };
 
+function random(min, max) {
+	return Math.random() * (max - min) + min;
+}
+
 const section_2 = {
 	title_in_position: false,
 	no_goal: function() {
@@ -132,60 +113,62 @@ const section_2 = {
 		splitText("passion-wrapper", "passion-text-wrapper", "passion-text-char");
 	},
 	passion_animate_in: function() {
-		let passion_array = document.getElementsByClassName("passion-text-wrapper");
+		let passionArray = document.getElementsByClassName("passion-text-wrapper");
 		document.getElementById("passion-wrapper").style.opacity = "1";
 		this.title_in_position = false;
-		let a = [];
-		for(var i=0; i<passion_array.length; i++) {
-			passion_array[i].childNodes.forEach(function(n) {
-
-				animation_property = {
-					x_end: "0",
-					y_end: "0",
-					z_end: "0",
-					scale_end: 1,
-					transform_type: "translate3d scale",
-					duration: 1500,
-					delay: i*50,
-				}
-
-				random_scale = {
-					min: -300,
-					max: 300,
-					scale_min: 1.1,
-					scale_max: 4.5
-				}
-
-				let l = new Letter(n, animation_property, random_scale);
-				a.push(l.animate());
-			});
+		
+		function formulatePos() {
+			return "translate3d(" + random(-300, 300) + "px, " + random(-300, 300) + "px, " + random(-300, 300) + "px) scale(" + random(1.1, 4.5) + ")";
 		};
-		a[a.length - 1].onfinish = function() {
-			if(section_2.title_in_position === false) {
-				section_2.in_position(section_2.no_goal());
-				section_2.in_position(section_2.beyond());
-				section_2.title_in_position = true;
+
+		function initialPos() {
+			let delay = 0;
+			for(var i=0; i<passionArray.length; i++) {
+				passionArray[i].childNodes.forEach(function(n) {
+					n.style.transitionDelay = (delay*0.015) + "s";
+					n.style.transform = formulatePos();
+					delay++;
+				});
 			}
 		};
+
+		function animatePos() {
+			for(var i=0; i<passionArray.length; i++) {
+				passionArray[i].childNodes.forEach(function(n) {
+					n.style.transform = "translate3d(0, 0, 0) scale(1)";
+					n.style.opacity = 1;
+				});
+			};
+
+			let last = passionArray[passionArray.length - 1].lastChild;
+			last.addEventListener("transitionend", function p() {
+				if(section_2.title_in_position == false) {
+					section_2.in_position(section_2.no_goal());
+					section_2.in_position(section_2.beyond());
+					section_2.title_in_position = true;
+				}
+				last.removeEventListener("transitionend", p);
+			});
+		};
+
+		initialPos();
+		requestAnimationFrame(animatePos);
 	},
 	passion_animate_out: function() {
 		this.title_in_position = true;
-		let passion_array = document.getElementsByClassName("passion-text-wrapper");
-		for(var i=0; i<passion_array.length; i++) {
-			passion_array[i].animate([
-			{
-				transform: "translate3d(0, 0, 0)",
-				opacity: 1
-			},
-			{
-				transform: "translate3d(0, 45px, 0)",
-				opacity: 0
-			}], {
-				duration: 1000,
-				easing: "cubic-bezier(.215,.61,.355,1)",
-				fill: "forwards"
-			})
+		let passionArray = document.getElementsByClassName("passion-text-wrapper");
+
+		function animatePos() {
+			for(var i=0; i<passionArray.length; i++) {
+				passionArray[i].childNodes.forEach(function(n) {
+					n.style.transitionDelay = "0s";
+					n.style.transform = "translate3d(0, 45px, 0) scale(1)";
+					n.style.opacity = 0;
+				});
+			};
 		};
+
+		animatePos();
 	}
 }
 
@@ -200,16 +183,15 @@ var section_2_out = function() {
 	section_2.remove_in_position(section_2.beyond());
 };	
 
+var requestAnimationFrame = window.requestAnimationFrame || 
+                            window.mozRequestAnimationFrame || 
+                            window.webkitRequestAnimationFrame || 
+                            window.msRequestAnimationFrame;
+
 const slide_1 = {
 	d_loaded: false,
 	leaving: false,
 	first_img: true,
-	img_1: function() {
-		return document.getElementById("project-1-1");
-	},
-	img_2: function() {
-		return document.getElementById("project-1-2");
-	},
 	name: function() {
 		return document.getElementById("project-1-name");
 	},
@@ -223,66 +205,74 @@ const slide_1 = {
 		return document.getElementsByClassName("project-1-description-word");
 	},
 	animate_in_img_1: function() {
-		this.img_1().animate([
-		{
-			opacity: 0,
-			transform: "translate3d(0, 10%, 0)"
-		}, {
-			opacity: 1,
-			transform: "translate3d(0, 0, 0)"
-		}], {
-			duration: 1000,
-			easing: "ease-in-out", 
-			fill: "forwards"
-		});
+		let img1 = document.getElementById("project-1-1");
+		let initialY = 10;
+		let initialOpacity = 0;
+
+		function animate() {
+			if(initialY > 0) {
+				initialY = initialY - 0.2;
+				initialOpacity = initialOpacity + 0.02;
+				img1.style.transform = "translate3d(0, " + initialY + "%, 0)";
+				img1.style.opacity = initialOpacity;
+				requestAnimationFrame(animate);
+			}
+		};
+		animate();
 	},
 	animate_in_img_2: function() {
-		this.img_2().animate([
-		{
-			opacity: 0,
-			transform: "translate3d(0, 10%, 0)"
-		}, {
-			opacity: 1,
-			transform: "translate3d(0, 0, 0)"
-		}], {
-			duration: 1000,
-			easing: "ease-in-out", 
-			fill: "forwards",
-			delay: 500
-		});
+		let img2 = document.getElementById("project-1-2");
+		let initialY = 10;
+		let initialOpacity = 0;
+
+		function animate() {
+			if(initialY > 0) {
+				initialY = initialY - 0.2;
+
+				initialOpacity = initialOpacity + 0.02;
+				img2.style.transform = "translate3d(0, " + initialY + "%, 0)";
+				img2.style.opacity = initialOpacity;
+				requestAnimationFrame(animate);
+			}
+		};
+		setTimeout(animate, 250);
 	},
 	animate_out_img_1: function() {
-		this.img_1().animate([
-		{
-			opacity: 1,
-			transform: "translate3d(0, 0, 0)"
-		}, {
-			opacity: 0,
-			transform: "translate3d(0, -10%, 0)"
-		}], {
-			duration: 1000,
-			easing: "ease-in-out", 
-			fill: "forwards"
-		});
+		let img1 = document.getElementById("project-1-1");
+		let initialY = 0;
+		let initialOpacity = 1;
+
+		function animate() {
+			if(initialY < 10) {
+				initialY = initialY + 0.2;
+				initialOpacity = initialOpacity - 0.02;
+				img1.style.transform = "translate3d(0, " + initialY + "%, 0)";
+				img1.style.opacity = initialOpacity;
+				requestAnimationFrame(animate);
+			}
+		};
+		animate();
 	},
 	animate_out_img_2: function() {
-		this.img_2().animate([
-		{
-			opacity: 1,
-			transform: "translate3d(0, 0, 0)"
-		}, {
-			opacity: 0,
-			transform: "translate3d(0, -10%, 0)"
-		}], {
-			duration: 1000,
-			easing: "ease-in-out", 
-			fill: "forwards"
-		});
+		let img2 = document.getElementById("project-1-2");
+		let initialY = 0;
+		let initialOpacity = 1;
+
+		function animate() {
+			if(initialY < 10) {
+				initialY = initialY + 0.2;
+				initialOpacity = initialOpacity - 0.02;
+				img2.style.transform = "translate3d(0, " + initialY + "%, 0)";
+				img2.style.opacity = initialOpacity;
+				requestAnimationFrame(animate);
+			}
+		};
+		animate();
 	},
 	ns_in_position: function() {
-		window.requestAnimationFrame(function() {
+		requestAnimationFrame(function() {
 			slide_1.name().style.transform = "translate3d(0, 0, 0)";
-			window.requestAnimationFrame(function() {
+			requestAnimationFrame(function() {
 				slide_1.subtitle().style.transform = "translate3d(0, 0, 0)";
 			})
 		});		
@@ -307,49 +297,28 @@ const slide_1 = {
 		name.addEventListener("transitionend", function n() {
 			if(slide_1.leaving === false) {
 				slide_1.d_loaded = true;
-				let d_array = slide_1.description_array();
-				let a = [];
-				for(var i=0; i<d_array.length; i++) {
-					let b = d_array[i].animate([
-					{
-						transform: "translate3d(0, 25px, 0)",
-						opacity: 0
-					},
-					{
-						transform: "translate3d(0, 0, 0)",
-						opacity: 1
-					}], {
-						duration: 1000,
-						easing: "cubic-bezier(.215,.61,.355,1)",
-						delay: (i*75),
-						fill: "forwards"
-					});
-					a.push(b);
+				let dArray = slide_1.description_array();
+
+				for(var i=0; i<dArray.length; i++) {
+					dArray[i].style.transitionDelay = (i*75/1000) + "s";
+					dArray[i].className += " project-1-description-word-in";
 				}
-				a[a.length - 1].onfinish = function() {
+
+				dArray[dArray.length - 1].addEventListener("transitionend", function d() {
 					if(slide_1.leaving === false && slide_1.d_loaded === true) {
 						slide_1.animate_in_project_link();
 					}
-				}
+					dArray[dArray.length - 1].removeEventListener("transitionend", d);
+				})
 			}
 			name.removeEventListener("transitionend", n);
 		});		
 	},
 	animate_out_description: function() {
-		let d_array = this.description_array();
-		for(var i=0; i<d_array.length; i++) {
-			d_array[i].animate([
-			{
-				transform: "translate3d(0, 0, 0)",
-				opacity: 1
-			}, {
-				transform: "translate3d(0, 10px, 0)",
-				opacity: 0
-			}], {
-				duration: 1000,
-				easing: "cubic-bezier(.215,.61,.355,1)",
-				fill: "forwards"
-			});
+		let dArray = this.description_array();
+		for(var i=0; i<dArray.length; i++) {
+			dArray[i].style.transitionDelay = "0s";
+			dArray[i].classList.remove("project-1-description-word-in");
 		};
 		this.d_loaded = false;
 	},
@@ -385,46 +354,30 @@ const slide_first = {
 		this.split_project();
 		document.getElementById("project-word").style.opacity = 1;
 		document.getElementById("arrow").style.opacity = 1;
-		let word_array = document.getElementsByClassName("project-wrapper-word");
+		let charArray = document.getElementsByClassName("project-wrapper-char");
 
-		for(var i=0; i<word_array.length; i++) {
-			for(var j=0; j<word_array[i].childNodes.length; j++) {
-				animation_property = {
-					y_begin: -word_array[i].childNodes[j].clientHeight ,
-					y_end: 0,
-					opacity_begin: 0,
-					transform_type: "translateY",
-					duration: 1000,
-					delay: (i+1)*j*100,
-					easing: "cubic-bezier(0.175, 0.885, 0.32, 1.275)"
-				}
-
-				let l = new Letter(word_array[i].childNodes[j], animation_property);
-				l.animate();
+		function animate() {
+			for(var i=0; i<charArray.length; i++) {
+				charArray[i].style.transitionTimingFunction = "cubic-bezier(0.175, 0.885, 0.32, 1.275)";
+				charArray[i].style.transitionDelay = i*0.1 + "s";
+				charArray[i].style.transform = "translate3d(0, 0, 0)";
+				charArray[i].style.opacity = 1;
 			}
-		}
+		};
+		requestAnimationFrame(animate);
 	},
 	animate_out: function() {
 		document.getElementById("arrow").style.opacity = 0;
-		let word_array = document.getElementsByClassName("project-wrapper-word");
+		let charArray = document.getElementsByClassName("project-wrapper-char");
 
-		for(var i=0; i<word_array.length; i++) {
-			for(var j=0; j<word_array[i].childNodes.length; j++) {
-				animation_property = {
-					y_begin: 0,
-					y_end: word_array[i].childNodes[j].clientHeight,
-					opacity_begin: 1,
-					opacity_end: 0,
-					transform_type: "translateY",
-					duration: 750,
-					delay: (i+1)*j*100,
-					easing: "cubic-bezier(0.55, 0.055, 0.675, 0.19)"
-				}
-
-				let l = new Letter(word_array[i].childNodes[j], animation_property);
-				l.animate();
+		function animate() {
+			for(var i=0; i<charArray.length; i++) {
+				charArray[i].style.transitionTimingFunction = "cubic-bezier(0.55, 0.055, 0.675, 0.19)";
+				charArray[i].style.transform = "translate3d(0, 100%, 0)";
+				charArray[i].style.opacity = 0;
 			}
-		}
+		};
+		requestAnimationFrame(animate);
 	}
 }
 
@@ -436,7 +389,7 @@ const slide_last = {
 		return document.getElementById("message");
 	},
 	animate_in_title: function() {
-		window.requestAnimationFrame(function() {
+		requestAnimationFrame(function() {
 			slide_last.title().style.transform = "translate3d(0, 0, 0)";
 		});
 	},
@@ -449,37 +402,19 @@ const slide_last = {
 	animate_in_message: function() {
 		this.split_message();
 		let message_array = document.getElementsByClassName("message-word");
-		for(var i=0; i<message_array.length; i++) {
-			message_array[i].animate([
-			{
-				opacity: 0,
-				transform: "translate3d(0, 30px, 0)"
-			}, {
-				opacity: 1,
-				transform: "translate3d(0, 0, 0)"
-			}], {
-				duration: 1000,
-				easing: "cubic-bezier(.215,.61,.355,1)",
-				delay: (i*75),
-				fill: "forwards"
-			})
-		};
+		
+		setTimeout(function() {
+			for(var i=0; i<message_array.length; i++) {
+				message_array[i].style.transitionDelay = (i*75/1000) + "s";
+				message_array[i].className = message_array[i].className + " message-word-in";
+			}
+		}, 500);	
 	},
 	animate_out_message: function() {
 		let message_array = document.getElementsByClassName("message-word");
 		for(var i=0; i<message_array.length; i++) {
-			message_array[i].animate([
-			{
-				opacity: 1,
-				transform: "translate3d(0, 0, 0)"
-			}, {
-				opacity: 0,
-				transform: "translate3d(0, 30px, 0)"
-			}], {
-				duration: 1000,
-				easing: "cubic-bezier(.215,.61,.355,1)",
-				fill: "forwards"
-			})
+			message_array[i].style.transitionDelay = "0s";
+			message_array[i].classList.remove("message-word-in");
 		};
 	},
 	animate_in: function() {
@@ -582,35 +517,37 @@ const section_4 = {
 	item: function() {
 		return document.getElementsByClassName("contact-item");
 	},
-	animate_in: function(el_list) {
-		for(var i=0; i<el_list.length; i++) {
-			let a = el_list[i].animate([
-			{
-				opacity: 0
-			}, {
-				opacity: 1
-			}], {
-				duration: 2000,
-				delay: i*250,
-				easing: "ease",
-				fill: "forwards"
-			})
-		};
+	animate_in: function(elList) {
+		function initialSet() {
+			for(var i=0; i<elList.length; i++) {
+				elList[i].style.transitionDelay = i*250/1000 + "s";
+			}
+		}
+
+		function animate() {
+			for(var i=0; i<elList.length; i++) {
+				elList[i].className += " contact-item-visible";
+			}
+		}
+
+		initialSet();
+		requestAnimationFrame(animate);
 	},
-	animate_out: function(el_list) {
-		for(var i=0; i<el_list.length; i++) {
-			el_list[el_list.length -1 -i].animate([
-			{
-				opacity: 1
-			}, {
-				opacity: 0
-			}], {
-				duration: 1000,
-				delay: i*100,
-				easing: "ease",
-				fill: "forwards"
-			})
-		};
+	animate_out: function(elList) {
+		function initialSet() {
+			for(var i=0; i<elList.length; i++) {
+				elList[elList.length - 1 - i].style.transitionDelay = i*250/1000 + "s";
+			}
+		}
+
+		function animate() {
+			for(var i=0; i<elList.length; i++) {
+				elList[i].classList.remove("contact-item-visible");
+			}
+		}
+
+		initialSet();
+		requestAnimationFrame(animate);
 	},
 	talk_in_position: function() {
 		this.talk().className = this.talk().className + " s4-in-position";

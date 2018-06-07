@@ -1,5 +1,10 @@
 window.onresize = function(){ location.reload(); }
 
+var requestAnimationFrame = window.requestAnimationFrame || 
+                            window.mozRequestAnimationFrame || 
+                            window.webkitRequestAnimationFrame || 
+                            window.msRequestAnimationFrame;
+
 const current = {
 	translate: 0,
 	page: 1,
@@ -75,17 +80,15 @@ const nav = {
 		}
 	},
 	animate_in: function(e) {
-		e.animate([
-		{
-			transform: "translateY(-100%)"
-		},
-		{
-			transform: "translateY(0)"
-		}], {
-			duration: 800,
-			easing: "ease",
-			fill: "forwards",
-		})
+		let currentY = -100;
+		function navIn() {
+			if(currentY < 0) {
+				currentY = currentY + 2.5;
+				e.style.transform = "translateY(" + currentY + "%)";
+				requestAnimationFrame(navIn);
+			}
+		}
+		navIn();
 	},
 	active_link: function(el, pos) {
 		el.style.color = this.nav_object[pos - 1].color;
@@ -93,8 +96,8 @@ const nav = {
 		el.style.width = "75px";
 	},
 	deactive_link: function(el, pos) {
-		el.style.color = "#7A8275";
-		el.style.borderColor = "#7A8275";
+		el.style.color = "#9BA695";
+		el.style.borderColor = "#9BA695";
 		el.style.width = "30px";
 	}
 }
@@ -112,85 +115,79 @@ const num = {
 const view = {
 	wheel: true,
 	wh: window.innerHeight,
-	formulate_begin: function() {
-		return "translateY(-" + ((current.page - 1) * this.wh) + "px)";
-	},
-	formulate_end: function() {
-		return "translateY(-" + ((current.next_page - 1) * this.wh) + "px)";;
-	},
 	scroll: function() {
 		view.disable_wheel();
 		let sec_out_function = window[current.get_out_function()];
 		sec_out_function();
 
-		let a = document.querySelector(".content").animate([
-		{
-			transform: "scale(1)"
-		}, {
-			transform: "scale(0.8)"
-		}], {
-			duration: 800,
-			easing: "ease-in-out",
-			fill: "forwards"
-		});
-		a.onfinish = function() {
-			if(current.difference() < 0 ) {
-				current.node().style.right = "unset";
-				current.node().style.left = 0;
-				current.node().childNodes[1].style.float = "left";
+		function animate() {
+			let a = document.querySelector(".content");
+			let initialScale = 1;
+			let currentWidth = 100;
+			let currentOpacity = 1;
+			let nextWidth = 0;
+			let nextOpacity = 0;
 
-				current.next_node().style.right = 0;
-				current.next_node().style.left = "unset";
-				current.next_node().childNodes[1].style.float = "right";
+			function shrink() {
+				if(initialScale > 0.8) {
+					initialScale = initialScale - 0.005;
+					a.style.transform = "scale(" + initialScale + ")";
+					requestAnimationFrame(shrink);
+				}
+				else {
+					if(current.difference() < 0 ) {
+						current.node().style.right = "unset";
+						current.node().style.left = 0;
+						current.node().childNodes[1].style.float = "left";
+
+						current.next_node().style.right = 0;
+						current.next_node().style.left = "unset";
+						current.next_node().childNodes[1].style.float = "right";
+					}
+					else {
+						current.node().style.right = 0;
+						current.node().style.left = "unset";
+						current.node().childNodes[1].style.float = "right";
+
+						current.next_node().style.right = "unset";
+						current.next_node().style.left = 0;
+						current.next_node().childNodes[1].style.float = "left";
+					}
+					currentOut();
+					nextIn();
+				}
 			}
-			else {
-				current.node().style.right = 0;
-				current.node().style.left = "unset";
-				current.node().childNodes[1].style.float = "right";
 
-				current.next_node().style.right = "unset";
-				current.next_node().style.left = 0;
-				current.next_node().childNodes[1].style.float = "left";
+			function currentOut() {
+				if(currentWidth > 0) {
+					currentWidth = currentWidth - 1.25;
+					currentOpacity = currentOpacity - 0.0125;
+					current.node().style.width = currentWidth + "%";
+					current.node().style.opacity = currentOpacity;
+					requestAnimationFrame(currentOut);
+				}
 			}
 
-			current.node().animate([
-			{
-				width: "100%",
-				opacity: 1
-			}, {
-				width: 0,
-				opacity: 0.6
-			}], {
-				duration: 1500,
-				easing: "cubic-bezier(.8,.13,.2,.87)",
-				fill: "forwards"
-			});
+			function nextIn() {
+				if(nextWidth < 100) {
+					nextWidth = nextWidth + 1.25;
+					nextOpacity = nextOpacity + 0.0125;
+					current.next_node().style.width = nextWidth + "%";
+					current.next_node().style.opacity = nextOpacity;
+					requestAnimationFrame(nextIn);
+				}
+				else {
+					zoom();
+				}
+			}
 
-			let b = current.next_node().animate([
-			{
-				width: 0,
-				opacity: 0.6
-			}, {
-				width: "100%",
-				opacity: 1
-			}], {
-				duration: 1500,
-				easing: "cubic-bezier(.8,.13,.2,.87)",
-				fill: "forwards"
-			});
-
-			b.onfinish = function() {
-				let c = document.querySelector(".content").animate([
-				{
-					transform: "scale(0.8)"
-				}, {
-					transform: "scale(1)"
-				}], {
-					duration: 800,
-					easing: "ease-in-out",
-					fill: "forwards"
-				});
-				c.onfinish = function() {
+			function zoom() {
+				if(initialScale < 1) {
+					initialScale = initialScale + 0.005;
+					a.style.transform = "scale(" + initialScale + ")";
+					requestAnimationFrame(zoom);
+				}
+				else {
 					nav.remove_element();
 					current.update_page();
 					let sec_in_function = window[current.get_in_function()];
@@ -200,7 +197,9 @@ const view = {
 					view.enable_wheel();
 				}
 			}
+			shrink();
 		}
+		animate();
 	},
 	disable_wheel: function() {
 		this.wheel = false;
