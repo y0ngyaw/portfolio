@@ -496,15 +496,17 @@ const section_3 = {
 			this.slide_status[i] = false;
 		}
 	},
-	mobile_move_slide: function() {
+	touchStartEvent: null,
+	touchEndEvent: null,
+	mobile_swipe: function() {
 		let touchStartX;
 		let touchEndX;
 		let s3 = document.getElementById("section-3");
-		s3.addEventListener("touchstart", function(e){
+		s3.addEventListener("touchstart", section_3.touchStartEvent = function(e){
 			touchStartX = e.changedTouches[0].clientX;
 		});
 
-		s3.addEventListener("touchend", function(e){
+		s3.addEventListener("touchend", section_3.touchEndEvent = function(e){
 			touchEndX = e.changedTouches[0].clientX;
 			navigate();
 		});
@@ -538,6 +540,11 @@ const section_3 = {
 				section_3.current_slide_in();
 			}
 		}
+	}, 
+	mobile_swipe_remove: function() {
+		let s3 = document.getElementById("section-3");
+		s3.removeEventListener("touchstart", section_3.touchStartEvent);
+		s3.removeEventListener("touchend", section_3.touchEndEvent);
 	}
 }
 
@@ -547,11 +554,12 @@ var section_3_in = function() {
 	s3.addEventListener("mousemove", function(event){
 		section_3.move_slide(event.clientX);
 	});	
-	section_3.mobile_move_slide();
+	section_3.mobile_swipe();
 };
 
 var section_3_out = function() {
 	section_3.all_slide_out();
+	section_3.mobile_swipe_remove();
 };
 
 const section_4 = {
