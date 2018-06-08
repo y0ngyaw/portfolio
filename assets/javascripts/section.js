@@ -70,17 +70,6 @@ var section_1_in = function() {
 			section_1.animate_in();
 		}
 	}, 1000);
-
-	/*
-	$(document).mousemove(function(e){
-		var ww = $( window ).width();
-		var wh = $( window ).height();
-		var mouseX = e.pageX;
-		var mouseY = e.pageY;
-		var traX = ( mouseX - ww/2 ) * 0.025 + 50;
-		var traY = ( mouseY - wh/2 ) * 0.025;
-		$(".section-1").css({"background-position": traX + "%" + traY + "%"});
-	});*/
 }
 
 var section_1_out = function() {

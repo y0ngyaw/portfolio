@@ -5,8 +5,20 @@ var requestAnimationFrame = window.requestAnimationFrame ||
                             window.webkitRequestAnimationFrame || 
                             window.msRequestAnimationFrame;
 
+/*
+*** Support Each Page Changing Mechanism
+*** 
+*** Possible useful function: 
+*** node() : get current viewbox
+*** next_node() : get next viewbox
+*** update_page() : set current page value = next page value (after all animation)
+*** set_next_page() : set next page value
+*** difference() : return cuurent page and next page comparison value
+*** get_in_function() & get_out_function() : return section function
+***
+*** For additional pages, please add section functions into in_function and out_function
+*/
 const current = {
-	translate: 0,
 	page: 1,
 	next_page: null,
 	in_function: ['section_1_in', 'section_2_in', 'section_3_in', 'section_4_in'],
@@ -34,9 +46,6 @@ const current = {
 			}
 		}
 	},
-	update_translate: function(translate) {
-		this.translate = translate
-	},
 	set_next_page: function(next_page) {
 		this.next_page = next_page;
 	},
@@ -50,6 +59,24 @@ const current = {
 		return this.out_function[this.page - 1];
 	}
 }
+
+/*
+*** Support Navbar 
+***
+***	Possible useful function:
+*** create_element(section) : create the label of the nav
+		params: section = data-section (number) of the element
+		return: label created (as div)
+*** append_element(el, pos, active) : add the label created
+		params: el = the "nav-link" on hover, pos = data-navigation value, active = whether the link contains active class
+*** remove_element(el, pos) : remove the label (usually hover out or change page)
+*** active_link(el, pos) : update color of the active link (hover or current page)
+*** deactive_link(el, pos) : return the color back to ori colour
+*** mobile_nav_in() : mobile nav panel move in
+*** move_nav_out() : mobile nav panel move out
+***
+*** For additional pages added, please add values at nav_object
+*/
 
 const nav = {
 	nav_object: [{text: "intro", color: "#15298A"}, {text: "passion", color: "#534178"}, {text: "project", color: "#2980B9"}, {text: "contact", color: "#AB5129"}],
@@ -117,6 +144,14 @@ const nav = {
 	}
 }
 
+/*
+*** Support the circle with page number
+***
+*** Possible useful function:
+*** update() : Animate the number in the circle
+***
+*** For additional pages added, please add additional numbers at index.html
+*/
 const num = {
 	first: function() {
 		return document.querySelector("#first-num");
@@ -127,6 +162,15 @@ const num = {
 	}
 }
 
+/*
+*** Support Page Changing animation
+***
+*** Possible useful function:
+*** scroll() : start the page changing animation. 
+		Please call this function after setting next page value in current obj
+*** disable_wheel() : stop user from changing page
+*** enable_wheel() : allow user from changing page
+*/
 const view = {
 	wheel: true,
 	wh: window.innerHeight,
@@ -140,6 +184,7 @@ const view = {
 			let initialScale = 1;
 			let direction = current.difference();
 
+			// Page shrink
 			function shrink() {
 				content.className += " content-shrink";
 				content.addEventListener("transitionend", function s() {
@@ -172,7 +217,6 @@ const view = {
 			let nextChildX = direction < 0 ? -100 : 100;
 			let nexChildXEnd = 0;
 			let nextIncrement = direction < 0 ? -1 : 1
-
 			function nextIn() {
 				nextParent.style.zIndex = 5;
 				if(Math.round(nextParentX) != nextParentXEnd) {
@@ -187,6 +231,7 @@ const view = {
 				}
 			}
 
+			// Rearrange the viewbox structure, page smaller than current at left and larger than curent at right
 			function resetStructure() {
 				let v = document.getElementsByClassName("viewbox");
 				let newCurrent = current.next_node();
@@ -208,6 +253,7 @@ const view = {
 				}
 			}
 
+			// Undo shrink and execute function for new page including reset structure, current page, nav, number circle and enable wheel
 			function zoom() {
 				content.classList.remove("content-shrink");
 				content.addEventListener("transitionend", function s() {
@@ -234,6 +280,10 @@ const view = {
 	}
 }
 
+/*
+*** This function is called whenever page is loaded.
+*** Animate and remove preloader, call all_ready function
+*/
 function preloader_ready() {
 	let svg_object = document.getElementById("preloader-svg");
 	let svg = svg_object.contentDocument;
@@ -255,8 +305,14 @@ function preloader_ready() {
 	}, 3000)
 }
 
+/*
+*** This function is called inside prelaoder_ready() whenever page is fully loaded
+*/
 function all_ready() {
+	// Update nav for the first page
 	nav.append_element();
+
+	// Handle nav for hover. When hover in, add label and change colour. Whne hover out, return original state
 	$(".nav-link").hover(function()	{
 		if(!this.classList.contains("active")){
 			nav.append_element(this, this.dataset.navigation, false);
@@ -267,6 +323,7 @@ function all_ready() {
 		}
 	});
 
+	// Handle when nav is clicked. Update next page value in current obj and call scroll animation start
 	$(".nav-link").click(function() {
 		if(view.wheel){
 			current.set_next_page(parseInt(this.dataset.navigation));
@@ -279,6 +336,7 @@ function all_ready() {
 		}
 	})
 
+	// Hanfle mobile nav icon being clicked. Bring down the nav container from top when click and bring it back to top when clicked again
 	$(".mobile-nav-indicator").click(function() {
 		let navbar = document.getElementById("navbar");
 		if(this.classList.contains("toggled") == false) {
@@ -295,6 +353,7 @@ function all_ready() {
 		}
 	})
 
+	// Handle mobile nav link when being clicked. Move the navbar back to top, update next page value in current obj and start page changing animation
 	$(".mobile-nav-link").click(function() {
 		let navbar = document.getElementById("navbar");
 		let linkData = this.dataset.navigation;
@@ -314,6 +373,7 @@ function all_ready() {
 		})
 	})
 
+	// Handle first section load when page first ready
 	if(!visited){
 		let sec_in_function = window[current.get_in_function()];
 		sec_in_function();
@@ -383,64 +443,10 @@ function all_ready() {
 
 }
 
+// When everything is loaded
 let visited = false;
 window.addEventListener("load", function() {
 	
 	preloader_ready();
 
 })
-
-
-/*
-
-$(document).ready(function() {
-	nav.append_element();
-	$(".nav-link").hover(function()	{
-		if(!this.classList.contains("active")){
-			nav.append_element(this, this.dataset.navigation, false);
-		};
-	}, function(){
-		if(!this.classList.contains("active")){
-			nav.remove_element(this, this.dataset.navigation);
-		}
-	});
-
-	$(".nav-link").click(function() {
-		if(view.wheel){
-			current.set_next_page(parseInt(this.dataset.navigation));
-			if(current.difference() == 0){
-				current.set_next_page(null);
-			}
-			else{
-				view.scroll();
-			}
-		}
-	})
-
-	if(!visited){
-		let sec_in_function = window[current.get_in_function()];
-		sec_in_function();
-		visited = true;
-	}
-
-	// Add Event Listener to <body> of the page
-	let body = document.querySelector("body");
-	body.addEventListener("wheel", function(){});
-	body.onwheel = function(event) {
-		// Check direction (1: scroll down, 2: scroll up)
-		let wheel_direction = event.deltaY > 0 ? 1 : -1;
-
-		if(view.wheel && !(current.page == 1 && wheel_direction == -1) && !(current.page == 4 && wheel_direction == 1)) {
-			if(wheel_direction === 1) {
-				current.set_next_page(current.page + 1);
-			}
-			else {
-				current.set_next_page(current.page - 1);
-			}
-			view.scroll();
-		}
-		else {
-			event.preventDefault();
-		}
-	};
-})*/
