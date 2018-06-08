@@ -219,10 +219,11 @@ function preloader_ready() {
 		p.style.animation = a;
 	}
 	setTimeout(function() {
-		let a = document.getElementById("preloader-circle");
-		a.className = a.className + " preloader-out";
+		let a = document.getElementById("view-screen");
+		a.classList.remove("view-screen-offset");
 
 		setTimeout(function() {
+			a.style.zIndex = "unset";
 			document.getElementById("preloader").remove();
 			all_ready();
 		}, 1500)
