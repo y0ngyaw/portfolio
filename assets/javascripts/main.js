@@ -282,12 +282,14 @@ function all_ready() {
 	$(".mobile-nav-indicator").click(function() {
 		let navbar = document.getElementById("navbar");
 		if(this.classList.contains("toggled") == false) {
-			this.className += " toggled"
+			this.className += " toggled";
+			view.disable_wheel();
 			navbar.style.transform = "translate3d(0, 0, 0)";
 			setTimeout(nav.mobile_nav_in, 400);
 		}
 		else {
 			this.classList.remove("toggled");
+			view.enable_wheel();
 			navbar.style.transform = "";
 			nav.mobile_nav_out();
 		}
