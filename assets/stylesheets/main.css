@@ -805,6 +805,10 @@ section {
 		font-size: 90%;
 	}
 
+	.content-shrink {
+		transform: scale(1);
+	}
+
 	/* Preloader */
 	.preloader object {
 		width: 80%;
@@ -831,18 +835,14 @@ section {
 	/* Section 1 */
 	.section-1-image {
 		bottom: unset;
-	    top: 15%;
-	    right: 3%;
-	    width: 85%;
+	    width: 75%;
 	}
 
 	.section-1-wrapper {
 		width: 85%;
 	    top: unset;
-	    bottom: 5%;
-	    left: 5%;
-	    padding: 10% 2%;
-	    background-color: rgba(255, 255, 255, 0.75);
+	    bottom: 15%;
+	    left: 8%;
 	}
 
 	.section-1-wrapper .section-1-title,
@@ -855,7 +855,7 @@ section {
 		width: 85%;
 		padding: 7.5%;
 		left: unset;
-		top: 60%;
+		top: 55%;
 	}
 
 	.section-2-wrapper .title-1-wrapper,
