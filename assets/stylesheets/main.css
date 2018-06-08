@@ -451,6 +451,10 @@ section {
 	transition-delay: 0.5s;
 }
 
+.slide-first .mobile-swipe {
+	display: none;
+}
+
 .project-word {
 	opacity: 0;
 }
@@ -965,11 +969,21 @@ section {
 
 	/* Section 3 */ 
 	.slide-first .arrow {
-		opacity: 1;
-		top: 55%;
-		right: unset;
+		display: none;
+	}
+
+	.slide-first .mobile-swipe {
+		display: block;
+		color: #fff;
+		position: absolute;
+		font-size: 75%;
+		font-family: "Play", sans-serif;
+		opacity: 0;
+		bottom: 5%;
 		left: 50%;
 		transform: translate(-50%, 0);
+		transition: opacity 1s ease-in-out;
+		transition-delay: 0.5s;
 	}
 
 	.slide-first .project-title {

@@ -354,6 +354,7 @@ const slide_first = {
 		this.split_project();
 		document.getElementById("project-word").style.opacity = 1;
 		document.getElementById("arrow").style.opacity = 1;
+		document.getElementById("mobile-swipe").style.opacity = 1;
 		let charArray = document.getElementsByClassName("project-wrapper-char");
 
 		function animate() {
@@ -368,6 +369,7 @@ const slide_first = {
 	},
 	animate_out: function() {
 		document.getElementById("arrow").style.opacity = 0;
+		document.getElementById("mobile-swipe").style.opacity = 0;
 		let charArray = document.getElementsByClassName("project-wrapper-char");
 
 		function animate() {
