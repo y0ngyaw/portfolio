@@ -121,59 +121,61 @@ const view = {
 		sec_out_function();
 
 		function animate() {
-			let a = document.querySelector(".content");
+			let content = document.querySelector(".content");
 			let initialScale = 1;
-			let currentWidth = 100;
-			let currentOpacity = 1;
-			let nextWidth = 0;
-			let nextOpacity = 0;
+			let direction = current.difference();
 
 			function shrink() {
+				/*
 				if(initialScale > 0.8) {
 					initialScale = initialScale - 0.005;
 					a.style.transform = "scale(" + initialScale + ")";
 					requestAnimationFrame(shrink);
 				}
 				else {
-					if(current.difference() < 0 ) {
-						current.node().style.right = "unset";
-						current.node().style.left = 0;
-						current.node().childNodes[1].style.float = "left";
-
-						current.next_node().style.right = 0;
-						current.next_node().style.left = "unset";
-						current.next_node().childNodes[1].style.float = "right";
-					}
-					else {
-						current.node().style.right = 0;
-						current.node().style.left = "unset";
-						current.node().childNodes[1].style.float = "right";
-
-						current.next_node().style.right = "unset";
-						current.next_node().style.left = 0;
-						current.next_node().childNodes[1].style.float = "left";
-					}
 					currentOut();
 					nextIn();
-				}
+				}*/
+
+				content.className += " content-shrink";
+				content.addEventListener("transitionend", function s() {
+					content.removeEventListener("transitionend", s);
+					currentOut();
+					nextIn();
+				})
 			}
 
+			let currentParent = current.node();
+			let currentChild = currentParent.childNodes[1];
+			let currentChildX = 0;
+			let currentChildXEnd = direction < 0 ? -10 : 10;
+			let currentIncrement = direction < 0 ? -1 : 1;
+			let currentChildOpac = 1;
 			function currentOut() {
-				if(currentWidth > 0) {
-					currentWidth = currentWidth - 1.25;
-					currentOpacity = currentOpacity - 0.0125;
-					current.node().style.width = currentWidth + "%";
-					current.node().style.opacity = currentOpacity;
+				if(Math.round(currentChildX) != currentChildXEnd) {
+					currentChildX = currentChildX + (0.1 * currentIncrement);
+					currentChildOpac -= 0.01;
+					currentChild.style.transform = "translate3d(" + currentChildX + "%, 0, 0)";
+					currentChild.style.opacity = currentChildOpac;
 					requestAnimationFrame(currentOut);
 				}
 			}
 
+			let nextParent = current.next_node();
+			let nextChild = nextParent.childNodes[1];
+			let nextParentX = direction < 0 ? 100 : -100;
+			let nextParentXEnd = 0;
+			let nextChildX = direction < 0 ? -100 : 100;
+			let nexChildXEnd = 0;
+			let nextIncrement = direction < 0 ? -1 : 1
+
 			function nextIn() {
-				if(nextWidth < 100) {
-					nextWidth = nextWidth + 1.25;
-					nextOpacity = nextOpacity + 0.0125;
-					current.next_node().style.width = nextWidth + "%";
-					current.next_node().style.opacity = nextOpacity;
+				nextParent.style.zIndex = 5;
+				if(Math.round(nextParentX) != nextParentXEnd) {
+					nextParentX = nextParentX + (1 * nextIncrement);
+					nextChildX = nextChildX + (1 * -nextIncrement);
+					nextParent.style.transform = "translate3d(" + nextParentX + "%, 0, 0)";
+					nextChild.style.transform = "translate3d(" + nextChildX + "%, 0, 0)";
 					requestAnimationFrame(nextIn);
 				}
 				else {
@@ -181,13 +183,36 @@ const view = {
 				}
 			}
 
+			function resetStructure() {
+				let v = document.getElementsByClassName("viewbox");
+				let newCurrent = current.next_node();
+				for(var i=0; i<v.length; i++) {
+					v[i].style.zIndex = "unset";
+					if(v[i] == newCurrent) {
+						continue;
+					}
+					if(v[i].dataset.section < newCurrent.dataset.section) {
+						v[i].style.transform = "translate3d(-100%, 0, 0)";
+						v[i].childNodes[1].style.transform = "translate3d(100%, 0, 0)";
+						v[i].childNodes[1].style.opacity = 1;
+					}
+					if(v[i].dataset.section > newCurrent.dataset.section) {
+						v[i].style.transform = "translate3d(100%, 0, 0)";
+						v[i].childNodes[1].style.transform = "translate3d(-100%, 0, 0)";
+						v[i].childNodes[1].style.opacity = 1;
+					}
+				}
+			}
+
 			function zoom() {
+				/*
 				if(initialScale < 1) {
 					initialScale = initialScale + 0.005;
 					a.style.transform = "scale(" + initialScale + ")";
 					requestAnimationFrame(zoom);
 				}
 				else {
+					resetStructure();
 					nav.remove_element();
 					current.update_page();
 					let sec_in_function = window[current.get_in_function()];
@@ -195,7 +220,19 @@ const view = {
 					nav.append_element();
 					num.update();
 					view.enable_wheel();
-				}
+				}*/
+				content.classList.remove("content-shrink");
+				content.addEventListener("transitionend", function s() {
+					content.removeEventListener("transitionend", s);
+					resetStructure();
+					nav.remove_element();
+					current.update_page();
+					let sec_in_function = window[current.get_in_function()];
+					sec_in_function();
+					nav.append_element();
+					num.update();
+					view.enable_wheel();	
+				})
 			}
 			shrink();
 		}

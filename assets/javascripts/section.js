@@ -168,7 +168,7 @@ const section_2 = {
 			};
 		};
 
-		animatePos();
+		requestAnimationFrame(animatePos);
 	}
 }
 
