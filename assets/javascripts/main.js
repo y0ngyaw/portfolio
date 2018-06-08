@@ -260,7 +260,7 @@ function all_ready() {
 		visited = true;
 	}
 
-	// Add Event Listener to <body> of the page
+	// Add Wheel Event Listener to <body> of the page
 	let body = document.querySelector("body");
 	body.addEventListener("wheel", function(){});
 	body.onwheel = function(event) {
@@ -280,6 +280,47 @@ function all_ready() {
 			event.preventDefault();
 		}
 	};
+
+
+	// Add Touchmove Event Listener to <body> of the page
+	// Touchscreen Device
+	let touchStartY;
+	let touchEndY;
+	body.addEventListener("touchstart", function(e){
+		touchStartY = e.changedTouches[0].clientY;
+	});
+
+	body.addEventListener("touchend", function(e){
+		touchEndY = e.changedTouches[0].clientY;
+		move();
+	});
+
+	function d() {
+		if(Math.abs(touchStartY - touchEndY) < 100) {
+			return 0;
+		}
+		if(touchStartY > touchEndY) {
+			return 1;
+		}
+		if(touchStartY < touchEndY) {
+			return -1;
+		}
+	}
+
+	function move() {
+		let direction = d();
+		if(view.wheel && !(current.page == 1 && direction == -1) && !(current.page == 4 && direction == 1) && !(direction == 0) ) {
+			if(direction == 1) {
+				current.set_next_page(current.page + 1);
+			}
+			if(direction == -1) {
+				current.set_next_page(current.page - 1);
+			}
+			view.scroll();
+		}
+	}
+	
+
 }
 
 let visited = false;
