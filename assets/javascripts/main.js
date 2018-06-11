@@ -79,7 +79,7 @@ const current = {
 */
 
 const nav = {
-	nav_object: [{text: "intro", color: "#15298A"}, {text: "passion", color: "#534178"}, {text: "project", color: "#2980B9"}, {text: "contact", color: "#AB5129"}],
+	nav_object: [{text: "intro", color: "#15298A"}, {text: "passion", color: "#FF8D00"}, {text: "project", color: "#2980B9"}, {text: "contact", color: "#D15300"}],
 	current_position: function() {
 		return document.querySelector(".current").dataset.section;
 	},

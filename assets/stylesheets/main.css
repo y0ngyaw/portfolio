@@ -240,7 +240,7 @@ section {
 }
 
 .section-2-color {
-	color: #534178;
+	color: #FF8D00;
 }
 
 .section-3-color {
@@ -248,7 +248,7 @@ section {
 }
 
 .section-4-color {
-	color: #AB5129;
+	color: #D15300;
 }
 
 /* Body */
@@ -371,7 +371,7 @@ section {
 	width: 30%;
 	position: absolute;
 	left: 60%;
-	top: 40%;
+	top: 38%;
 }
 
 .section-2-wrapper .title-1-wrapper,
@@ -702,6 +702,11 @@ section {
 	width: auto;
 	box-sizing: border-box;
 	white-space: nowrap;
+	transition: transform 0.5s ease-in-out;
+}
+
+.contact-flex-wrapper .contact-item a:hover {
+	transform: translate3d(10%, 0, 0);
 }
 
 .contact-item a i{
@@ -972,7 +977,11 @@ section {
 		bottom: 0;
 		left: 0;
 	}
-
+	
+	/* Mouse Indicatior */
+	.mouse-indicator {
+		display: none;
+	}
 
 	/* Number */
 	.num-container {
